@@ -11,9 +11,9 @@ public:
     RoutePlanner(DbManager *db);
 private:
     DbManager *_db ;
-    std::vector<std::vector<bool>> _adjmx;
-
-    void create_adjacency_matrix();
+    std::vector<std::vector<u_int>> _adj;
+    void create_adjacency_list();
+    void BFS(int start);
 };
 
 #endif // ROUTEPLANNER_H

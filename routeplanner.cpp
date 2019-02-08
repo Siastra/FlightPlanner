@@ -1,33 +1,63 @@
 #include "routeplanner.h"
 #include <iostream>
+#include <list>
 
 RoutePlanner::RoutePlanner(DbManager *db)
 {
     _db = db;
 
     std::cout << "Creating adj matrix, this might take a while..." << std::endl;
-    create_adjacency_matrix();
+    create_adjacency_list();
     std::cout << "Done!" << std::endl;
-
 }
 
-void RoutePlanner::create_adjacency_matrix()
+void RoutePlanner::create_adjacency_list()
 {
     u_int num_airport{_db->getAirportCount()};
-
-    _adjmx.resize(num_airport);
-
-    for (u_int i{0}; i < num_airport; ++i) {
-        _adjmx[i].resize(num_airport);
-    }
+    _adj.resize(num_airport);
 
     auto routes = _db->getAllRoutes();
 
-    for (u_int i{0}; i < routes.size(); ++i) {
-        auto route{routes[i]};
-        QString airport1{route[1]};
-        auto airport2{route[2]};
+    foreach (auto route, routes) {
+        int airport1{route[1].toInt()};
+        int airport2{route[2].toInt()};
 
-        std::cout << airport1.toStdString() << std::endl;
+        _adj[airport1].push_back(airport2);
+    }
+
+    BFS(69);
+}
+
+/* Breadth-first search */
+void RoutePlanner::BFS(int start)
+{
+    u_int num_airport{_db->getAirportCount()};
+    bool visited[num_airport];
+
+    for (u_int i = 0; i < num_airport; ++i) {
+        visited[i] = false;
+    }
+
+    std::list<u_int> queue;
+
+    visited[start] = true;
+    queue.push_back(start);
+
+    while(!queue.empty())
+    {
+        int s = queue.front();
+        std::cout << s << " ";
+        queue.pop_front();
+
+        for (u_int i{0}; i < _adj[s].size(); ++i)
+        {
+            u_int id{_adj[s][i]};
+
+            if (!visited[id])
+            {
+                visited[id] = true;
+                queue.push_back(id);
+            }
+        }
     }
 }

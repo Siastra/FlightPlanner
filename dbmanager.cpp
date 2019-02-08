@@ -28,7 +28,7 @@ std::vector<std::vector<QString>> DbManager::getAllRoutes() {
     int airport2C = query.record().indexOf("airport2");
     while (query.next())
     {
-       result.push_back({query.value(airlineC).toString(), getAirportName(query.value(airport1C).toString()), getAirportName(query.value(airport2C).toString())});
+       result.push_back({query.value(airlineC).toString(), query.value(airport1C).toString(), query.value(airport2C).toString()});
     }
     return result;
 }

@@ -33,13 +33,15 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     dbmanager.cpp \
-    drawablemapwidget.cpp
+    drawablemapwidget.cpp \
+    routeplanner.cpp
     routeplanner.cpp
 
 HEADERS += \
         mainwindow.h \
     dbmanager.h \
-    drawablemapwidget.h
+    drawablemapwidget.h \
+    routeplanner.h
     routeplanner.h
 
 FORMS += \

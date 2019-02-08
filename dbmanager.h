@@ -17,7 +17,6 @@ public:
     QString getAirportName(QString id);
     QStringList getAllAirlineNames();
     QStringList getAllAirportNames();
-
     QList<std::tuple<int, int>> getLatLongOfAllAirports();
     u_int getAirportCount();
 private:
