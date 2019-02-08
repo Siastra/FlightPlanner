@@ -1,5 +1,7 @@
 #include "dbmanager.h"
 
+#include <QFile>
+
 DbManager::DbManager(const QString& path)
 {
    m_db = QSqlDatabase::addDatabase("QSQLITE");
@@ -57,4 +59,15 @@ QStringList DbManager::getAllAirportNames() {
         result.push_back(QString(query.value(name).toString().simplified() + "(" +query.value(iata).toString() + ")"));
     }
     return result;
+}
+
+QList<std::tuple<int, int>> DbManager::getLatLongOfAllAirports()
+{
+    QList<std::tuple<int, int>> ret;
+    QSqlQuery query("SELECT latitude, longitude from Airport;");
+
+    while (query.next()) {
+        ret.push_back(std::make_tuple<int, int>(query.value("latitude").toInt(), query.value("longitude").toInt()));
+    }
+    return ret;
 }

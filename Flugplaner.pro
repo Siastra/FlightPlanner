@@ -29,11 +29,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    dbmanager.cpp
+    dbmanager.cpp \
+    drawablemapwidget.cpp
 
 HEADERS += \
         mainwindow.h \
-    dbmanager.h
+    dbmanager.h \
+    drawablemapwidget.h
 
 FORMS += \
         mainwindow.ui

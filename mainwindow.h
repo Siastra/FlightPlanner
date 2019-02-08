@@ -17,9 +17,10 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    DbManager dbm{"../Flugplaner/static/AirlineRoutes.db"};
+
 private:
     Ui::MainWindow *ui;
-    DbManager dbm{"../Flugplaner/static/AirlineRoutes.db"};
 };
 
 #endif // MAINWINDOW_H

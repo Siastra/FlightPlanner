@@ -95,29 +95,14 @@
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="360,360">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,360">
         <item>
-         <widget class="QLabel" name="map">
+         <widget class="DrawableMapWidget" name="widget" native="true">
           <property name="minimumSize">
            <size>
             <width>720</width>
             <height>360</height>
            </size>
-          </property>
-          <property name="baseSize">
-           <size>
-            <width>720</width>
-            <height>360</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="flugresourcen.qrc">:/new/prefix1/static/Earthmap.jpg</pixmap>
-          </property>
-          <property name="scaledContents">
-           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -143,14 +128,20 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>22</height>
+     <height>30</height>
     </rect>
    </property>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="flugresourcen.qrc"/>
- </resources>
+ <customwidgets>
+  <customwidget>
+   <class>DrawableMapWidget</class>
+   <extends>QWidget</extends>
+   <header>drawablemapwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
  <connections/>
 </ui>
