@@ -6,7 +6,10 @@
 
 QT       += core gui
 
+CONFIG += qt
+
 QT += sql
+QT += gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,11 +34,13 @@ SOURCES += \
         mainwindow.cpp \
     dbmanager.cpp \
     drawablemapwidget.cpp
+    routeplanner.cpp
 
 HEADERS += \
         mainwindow.h \
     dbmanager.h \
     drawablemapwidget.h
+    routeplanner.h
 
 FORMS += \
         mainwindow.ui

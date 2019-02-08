@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "dbmanager.h"
 
 #include <QFile>
@@ -71,3 +73,12 @@ QList<std::tuple<int, int>> DbManager::getLatLongOfAllAirports()
     }
     return ret;
 }
+u_int DbManager::getAirportCount()
+{
+    QSqlQuery query("SELECT count(*) FROM Airport;");
+    query.next();
+    int col{query.record().indexOf("count(*)")};
+
+    return query.value(col).toInt();
+}
+
