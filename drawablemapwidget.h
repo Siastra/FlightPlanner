@@ -2,6 +2,9 @@
 #define DRAWABLEMAPWIDGET_H
 
 #include <QWidget>
+#include "dbmanager.h"
+#include "mainwindow.h"
+#include <QApplication>
 
 class DrawableMapWidget : public QWidget
 {
@@ -16,6 +19,8 @@ public:
 signals:
 
 public slots:
+
+private:
 };
 
 #endif // DRAWABLEMAPWIDGET_H
