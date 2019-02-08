@@ -71,3 +71,4 @@ QList<std::tuple<int, int>> DbManager::getLatLongOfAllAirports()
     }
     return ret;
 }
+

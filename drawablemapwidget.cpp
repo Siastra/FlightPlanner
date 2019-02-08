@@ -1,6 +1,7 @@
 #include "drawablemapwidget.h"
 
 #include "mainwindow.h"
+#include <algorithm>
 
 #include <QStringList>
 #include <QPainter>
@@ -8,7 +9,6 @@
 
 DrawableMapWidget::DrawableMapWidget(QWidget *parent) : QWidget(parent)
 {
-
 }
 
 void DrawableMapWidget::paintEvent(QPaintEvent*)
@@ -20,7 +20,7 @@ void DrawableMapWidget::paintEvent(QPaintEvent*)
 
     painter.setPen(QPen{QBrush{QColor{0,255,0, 200}}, 2});
 
-    auto airports = (static_cast<MainWindow*>(qApp->activeWindow()))->dbm.getLatLongOfAllAirports();
+    auto airports = static_cast<MainWindow*>(qApp->activeWindow())->dbm.getLatLongOfAllAirports();
     for (std::tuple<int, int> airport : airports) {
         auto img_coord = latLonToImg(airport);
         int lat = std::get<0>(img_coord);
@@ -39,3 +39,4 @@ std::tuple<int, int> DrawableMapWidget::latLonToImg(std::tuple<int, int> inp)
 {
     return latLonToImg(std::get<0>(inp), std::get<1>(inp));
 }
+
