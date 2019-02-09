@@ -8,8 +8,19 @@ RoutePlanner::RoutePlanner(DbManager *db)
     _db = db;
 
     create_adjacency_list();
-    auto routes_to_end = get_all_routes(4908, 48);
-    print_list_list(routes_to_end);
+
+}
+
+std::list<std::list<u_int>> RoutePlanner::get_routes(u_int start, u_int end)
+{
+    auto routes{get_all_routes(start, end)};
+
+    if (routes.size())
+    {
+        return filter_min_only(routes);
+    }
+
+    return routes;
 }
 
 void RoutePlanner::print_list_list(std::list<std::list<u_int>> list_list) {
@@ -37,6 +48,29 @@ void RoutePlanner::create_adjacency_list()
 
         _adj[airport1].push_back(airport2);
     }
+}
+
+std::list<std::list<u_int>> RoutePlanner::filter_min_only(std::list<std::list<u_int>> list_list)
+{
+    u_int min{get_min_hops(list_list)};
+
+    list_list.remove_if([min](std::list<u_int>& list) {
+        return (list.size() > min);
+    });
+
+    return list_list;
+}
+
+u_int RoutePlanner::get_min_hops(std::list<std::list<u_int>> list_list)
+{
+    long unsigned int min{list_list.front().size()};
+
+    foreach (auto list, list_list) {
+        if (list.size() < min)
+            min = list.size();
+    }
+
+    return min;
 }
 
 /* Depth-first search */
