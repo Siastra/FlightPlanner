@@ -68,11 +68,12 @@ QList<std::tuple<int, int>> DbManager::getLatLongOfAllAirports()
     QList<std::tuple<int, int>> ret;
     QSqlQuery query("SELECT latitude, longitude from Airport;");
 
-    while (query.next()) {
+    while (query.next()) { 
         ret.push_back(std::make_tuple<int, int>(query.value("latitude").toInt(), query.value("longitude").toInt()));
     }
     return ret;
 }
+
 u_int DbManager::getAirportCount()
 {
     QSqlQuery query("SELECT count(*) FROM Airport;");
