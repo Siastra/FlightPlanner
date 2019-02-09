@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 
 #include "dbmanager.h"
 
@@ -72,6 +73,19 @@ QList<std::tuple<int, int>> DbManager::getLatLongOfAllAirports()
         ret.push_back(std::make_tuple<int, int>(query.value("latitude").toInt(), query.value("longitude").toInt()));
     }
     return ret;
+}
+
+u_int DbManager::getAirportIdFromInput(std::string input)
+{
+    auto iata{input.substr(input.size() - 4, 3)};
+
+    QSqlQuery query("SELECT id FROM Airport where iata = \"" + QString::fromStdString(iata) + "\";");
+    query.next();
+    int col{query.record().indexOf("id")};
+
+    std::cout << iata << " "  << query.value(col).toInt() << std::endl;
+
+    return query.value(col).toInt();
 }
 
 u_int DbManager::getAirportCount()

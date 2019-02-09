@@ -8,19 +8,7 @@ RoutePlanner::RoutePlanner(DbManager *db)
     _db = db;
 
     create_adjacency_list();
-
-}
-
-std::list<std::list<u_int>> RoutePlanner::get_routes(u_int start, u_int end)
-{
-    auto routes{get_all_routes(start, end)};
-
-    if (routes.size())
-    {
-        return filter_min_only(routes);
-    }
-
-    return routes;
+    std::cout << "min: " << get_min_hops(4908, 1088) << std::endl;
 }
 
 void RoutePlanner::print_list_list(std::list<std::list<u_int>> list_list) {
@@ -50,76 +38,45 @@ void RoutePlanner::create_adjacency_list()
     }
 }
 
-std::list<std::list<u_int>> RoutePlanner::filter_min_only(std::list<std::list<u_int>> list_list)
+/* Breath-first search, seperator at the end of each row to keep count */
+u_int RoutePlanner::get_min_hops(u_int from, u_int to)
 {
-    u_int min{get_min_hops(list_list)};
-
-    list_list.remove_if([min](std::list<u_int>& list) {
-        return (list.size() > min);
-    });
-
-    return list_list;
-}
-
-u_int RoutePlanner::get_min_hops(std::list<std::list<u_int>> list_list)
-{
-    long unsigned int min{list_list.front().size()};
-
-    foreach (auto list, list_list) {
-        if (list.size() < min)
-            min = list.size();
-    }
-
-    return min;
-}
-
-/* Depth-first search */
-std::list<std::list<u_int>> RoutePlanner::get_all_routes(u_int start, u_int end)
-{
-    std::list<std::stack<u_int>> results;
     u_int num_airport{_db->getAirportCount()};
     std::vector<bool> visited(num_airport, false);
+    visited[from] = true;
 
-    std::stack<u_int> stack;
-    stack.push(start);
+    std::list<u_int> queue;
+    queue.push_back(from);
+    u_int layer{0};
+    u_int layer_seperator{from};
 
-    while (!stack.empty())
+    while(!queue.empty())
     {
-        u_int curr_node{stack.top()};
+        auto curr_node = queue.front();
+        queue.pop_front();
+        bool new_layer{curr_node == layer_seperator};
 
-        foreach (u_int node, _adj[curr_node]) {
-            if (!visited[node] && node != end) {
-                stack.push(node);
-                visited[node] = true;
-                continue;
-            } else if (node == end && !visited[node])
+        foreach (auto node, _adj[curr_node])
+        {
+
+            if (!visited[node])
             {
+
+                if (new_layer) {
+                    layer_seperator = node;
+                    new_layer = false;
+                    layer++;
+                }
+
+                if (node == to) {
+                    return layer;
+                }
+
                 visited[node] = true;
-                stack.push(end);
-                results.push_back(stack);
-                stack.pop();
+                queue.push_back(node);
             }
         }
-
-        if (curr_node == stack.top()) {
-            visited[end] = false;
-            stack.pop();
-        }
     }
 
-    std::list<std::list<u_int>> formatted_results;
-
-    foreach (auto route, results)
-    {
-        std::list<u_int> new_route;
-
-        while (!route.empty()) {
-            new_route.push_front(route.top());
-            route.pop();
-        }
-
-        formatted_results.push_front(new_route);
-    }
-
-    return formatted_results;
+    return layer;
 }

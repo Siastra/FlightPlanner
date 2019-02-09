@@ -19,6 +19,10 @@ public:
     ~MainWindow();
 
     DbManager dbm{"../FlightPlanner/static/AirlineRoutes.db"};
+    RoutePlanner rpl{&dbm};
+
+private slots:
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
