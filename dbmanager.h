@@ -20,6 +20,8 @@ public:
     QStringList getAllAirportNames();
 
     QList<std::tuple<int, int, int>> getLatLongOfAllAirports();
+    u_int getAirportCount();
+    u_int getAirportIdFromInput(std::string input);
 private:
     QSqlDatabase m_db;
 };

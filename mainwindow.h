@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "dbmanager.h"
+#include "routeplanner.h"
 #include <iostream>
 
 namespace Ui {
@@ -14,10 +15,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
     DbManager dbm;
+    RoutePlanner rpl{&dbm};
+
+private slots:
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
