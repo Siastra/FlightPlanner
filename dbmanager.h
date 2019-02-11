@@ -12,13 +12,14 @@
 class DbManager
 {
 public:
+    DbManager();
     DbManager(const QString& path);
     std::vector<std::vector<QString>> getAllRoutes();
     QString getAirportName(QString id);
     QStringList getAllAirlineNames();
     QStringList getAllAirportNames();
 
-    QList<std::tuple<int, int>> getLatLongOfAllAirports();
+    QList<std::tuple<int, int, int>> getLatLongOfAllAirports();
 private:
     QSqlDatabase m_db;
 };

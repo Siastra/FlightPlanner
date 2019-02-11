@@ -2,6 +2,11 @@
 
 #include <QFile>
 
+DbManager::DbManager()
+{
+
+}
+
 DbManager::DbManager(const QString& path)
 {
    m_db = QSqlDatabase::addDatabase("QSQLITE");
@@ -61,13 +66,13 @@ QStringList DbManager::getAllAirportNames() {
     return result;
 }
 
-QList<std::tuple<int, int>> DbManager::getLatLongOfAllAirports()
+QList<std::tuple<int, int, int>> DbManager::getLatLongOfAllAirports()
 {
-    QList<std::tuple<int, int>> ret;
-    QSqlQuery query("SELECT latitude, longitude from Airport;");
+    QList<std::tuple<int, int, int>> ret;
+    QSqlQuery query("SELECT id, latitude, longitude from Airport order by id asc;");
 
     while (query.next()) {
-        ret.push_back(std::make_tuple<int, int>(query.value("latitude").toInt(), query.value("longitude").toInt()));
+        ret.push_back(std::make_tuple<int, int, int>(query.value("id").toInt(), query.value("latitude").toInt(), query.value("longitude").toInt()));
     }
     return ret;
 }

@@ -14,13 +14,18 @@ public:
 
     void paintEvent(QPaintEvent* e);
     std::tuple<int, int> latLonToImg(int lat, int lon);
-    std::tuple<int, int> latLonToImg(std::tuple<int, int> inp);
+    std::tuple<int, int> latLonToImg(std::tuple<int, int, int> inp);
+
+    void connectTheDots(std::vector<std::vector<int>> routes);
 
 signals:
 
 public slots:
 
 private:
+    QPixmap pic;
+
+    void resetPic();
 };
 
 #endif // DRAWABLEMAPWIDGET_H
