@@ -10,7 +10,6 @@
 DrawableMapWidget::DrawableMapWidget(QWidget *parent) : QWidget(parent)
 {
     resetPic();
-    connectTheDots({{1, 5611}});
 }
 
 void DrawableMapWidget::paintEvent(QPaintEvent*)

@@ -29,3 +29,14 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+    auto from_id{dbm.getAirportIdFromInput(ui->FromSearch->text().toStdString())};
+    auto to_id{dbm.getAirportIdFromInput(ui->ToSearch->text().toStdString())};
+
+    std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
+
+    //auto routes{rpl.get_routes(from_id, to_id)};
+    //rpl.print_list_list(routes);
+}

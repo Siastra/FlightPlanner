@@ -1,3 +1,6 @@
+#include <vector>
+#include <iostream>
+
 #include "dbmanager.h"
 
 #include <QFile>
@@ -31,7 +34,7 @@ std::vector<std::vector<QString>> DbManager::getAllRoutes() {
     int airport2C = query.record().indexOf("airport2");
     while (query.next())
     {
-       result.push_back({query.value(airlineC).toString(), getAirportName(query.value(airport1C).toString()), getAirportName(query.value(airport2C).toString())});
+       result.push_back({query.value(airlineC).toString(), query.value(airport1C).toString(), query.value(airport2C).toString()});
     }
     return result;
 }
@@ -75,5 +78,27 @@ QList<std::tuple<int, int, int>> DbManager::getLatLongOfAllAirports()
         ret.push_back(std::make_tuple<int, int, int>(query.value("id").toInt(), query.value("latitude").toInt(), query.value("longitude").toInt()));
     }
     return ret;
+}
+
+u_int DbManager::getAirportIdFromInput(std::string input)
+{
+    auto iata{input.substr(input.size() - 4, 3)};
+
+    QSqlQuery query("SELECT id FROM Airport where iata = \"" + QString::fromStdString(iata) + "\";");
+    query.next();
+    int col{query.record().indexOf("id")};
+
+    std::cout << iata << " "  << query.value(col).toInt() << std::endl;
+
+    return query.value(col).toInt();
+}
+
+u_int DbManager::getAirportCount()
+{
+    QSqlQuery query("SELECT count(*) FROM Airport;");
+    query.next();
+    int col{query.record().indexOf("count(*)")};
+
+    return query.value(col).toInt();
 }
 
