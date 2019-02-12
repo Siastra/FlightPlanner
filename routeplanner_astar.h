@@ -11,22 +11,6 @@
 
 #include <iostream> // TODO: remove later
 
-struct Airport_node {
-        double G, H, lat, lon;
-        int id;
-        Airport_node *parent;
-        Airport_node(int id, double lat, double lon, Airport_node *parent_ = nullptr) {
-            this->id = id;
-            parent = parent_;
-            G = H = 0;
-            this->lat = lat;
-            this->lon = lon;
-        }
-        double getScore() {
-            return G + H;
-        }
-};
-
 template<typename T, typename priority_t>
 struct PriorityQueue {
   typedef std::pair<priority_t, T> PQElement;
@@ -61,8 +45,6 @@ private:
     void get_connected_airports();
     double get_distance(int airport1, int airport2);
     std::vector<std::vector<int>> conn_airpots;
-    Airport_node create_node(int id, Airport_node *parent_ = nullptr);
-    Airport_node* findNodeOnList(std::vector<Airport_node*>& nodes_, int id);
     double toRad(double value);
     double calcCrow(double lat1, double lon1, double lat2, double lon2);
 };

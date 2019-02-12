@@ -40,34 +40,8 @@ double Routeplanner_astar::get_distance(int airport1, int airport2) {
     return calcCrow(std::get<1>(airport1_pos), std::get<2>(airport1_pos), std::get<1>(airport2_pos), std::get<2>(airport2_pos));
 }
 
-Airport_node Routeplanner_astar::create_node(int id, Airport_node *parent_) {
-    auto pos = this->db->getLatLongOfAirport(id);
-    Airport_node ret = Airport_node(id, std::get<1>(pos), std::get<2>(pos), parent_);
-    return ret;
-}
-
-Airport_node* Routeplanner_astar::findNodeOnList(std::vector<Airport_node*>& nodes_, int id) {
-    for (auto node : nodes_) {
-        if (node->id == id) {
-            return node;
-        }
-    }
-    return nullptr;
-}
-
 std::vector<std::vector<int>> Routeplanner_astar::get_routes(int from, int to) {
     std::vector<std::vector<int>> routes;
-    std::cout << "in get routes" << std::endl;
-    //std::cout << from << std::endl;
-    //std::cout << to << std::endl;
-
-    double d = this->get_distance(from, to);
-    std::cout << "distance: " << d << std::endl;
-
-    std::vector<int> airports = conn_airpots[from];
-    foreach (int airport_id, airports) {
-        std::cout << airport_id << std::endl;
-    }
 
     PriorityQueue<int, double> frontier;
     frontier.put(from, 0);
@@ -102,87 +76,10 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes(int from, int to) {
       path.push_back(current);
       current = came_from[current];
     }
+
     path.push_back(from);
     std::reverse(path.begin(), path.end());
     routes.push_back(path);
-    foreach (auto airport, path) {
-        std::cout << airport << std::endl;
-    }
-    /*
-    Airport_node *current = nullptr;
-    std::vector<Airport_node*> openSet, closedSet;
-    Airport_node first = this->create_node(from);
-    openSet.push_back(&first);
-    openSet.reserve(100);
-    closedSet.reserve(100);
-
-    while (!openSet.empty()) {
-        auto current_it = openSet.begin();
-        current = *current_it;
-
-        for (auto it = openSet.begin(); it != openSet.end(); it++) {
-            auto node = *it;
-            if (node->getScore() <= current->getScore()) {
-                current = node;
-                current_it = it;
-            }
-        }
-
-        if (current->id == to) {
-            break;
-        } else {
-            //std::cout << current->id << std::endl;
-        }
-
-        closedSet.push_back(current);
-        openSet.erase(current_it);
-
-        auto conn_to_curr = conn_airpots[current->id];
-        //foreach (auto airport__, conn_to_curr) {
-        //    std::cout << airport__ << std::endl;
-        //}
-        //return routes;
-
-        foreach (auto next_id, conn_to_curr) {
-            if (findNodeOnList(closedSet, next_id)) {
-                std::cout << next_id << std::endl;
-                continue;
-            }
-
-            double totalCost = current->G + get_distance(current->id, next_id);
-
-            Airport_node *successor = findNodeOnList(openSet, next_id);
-            if (successor == nullptr) {
-                Airport_node tmp = this->create_node(next_id, current);
-                successor = &tmp;
-                successor->G = totalCost;
-                successor->H = get_distance(next_id, to);
-                //std::cout << "next id: " << next_id << std::endl;
-                //std::cout << "H: " << successor->H << std::endl;
-                //std::cout << "OpenSet: " << openSet.size() << std::endl;
-                //std::cout << "ClosedSet: " << closedSet.size() << std::endl;
-                openSet.push_back(successor);
-            }
-            else if (totalCost < successor->G) {
-                successor->parent = current;
-                successor->G = totalCost;
-            }
-        }
-    }
-
-    std::vector<int> path;
-    while (current != nullptr) {
-        path.push_back(current->id);
-        current = current->parent;
-    }
-
-    //releaseNodes(openSet);
-    //releaseNodes(closedSet);
-
-    routes.push_back(path);
-    foreach (auto airport, path) {
-        std::cout << airport << std::endl;
-    }*/
 
     return routes;
 }
