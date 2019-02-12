@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include "dbmanager.h"
-#include "mainwindow.h"
 #include <QApplication>
 
 class DrawableMapWidget : public QWidget

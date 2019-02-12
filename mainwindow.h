@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "dbmanager.h"
 #include "routeplanner.h"
+#include "drawablemapwidget.h"
 #include <iostream>
 
 namespace Ui {
@@ -19,7 +20,7 @@ public:
     ~MainWindow();
 
     DbManager dbm;
-    RoutePlanner rpl{&dbm};
+    RoutePlanner rpl;
 
 private slots:
     void on_pushButton_clicked();

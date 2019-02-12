@@ -11,6 +11,12 @@ RoutePlanner::RoutePlanner(DbManager *db)
     std::cout << "min: " << get_min_hops(4908, 1088) << std::endl;
 }
 
+void RoutePlanner::init(DrawableMapWidget *dw, QTableView* flighttable)
+{
+    this->_dw = dw;
+    this->_flighttable = flighttable;
+}
+
 void RoutePlanner::print_list_list(std::list<std::list<u_int>> list_list) {
     foreach (auto list, list_list)
     {

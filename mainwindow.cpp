@@ -6,6 +6,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
+    rpl{&dbm},
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -23,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
     completerAp->setMaxVisibleItems(20);
     ui->FromSearch->setCompleter(completerAp);
     ui->ToSearch->setCompleter(completerAp);
+
+    rpl.init(ui->map, ui->flighttable);
 }
 
 MainWindow::~MainWindow()
