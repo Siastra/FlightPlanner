@@ -3,7 +3,6 @@
 Routeplanner_astar::Routeplanner_astar(DbManager *db) {
     this->db = db;
     this->get_connected_airports();
-
 }
 
 void Routeplanner_astar::init(DrawableMapWidget *dw, QTableView* flighttable){
