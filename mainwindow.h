@@ -6,6 +6,7 @@
 #include "routeplanner_astar.h"
 #include "drawablemapwidget.h"
 #include <iostream>
+#include <QListWidget>
 
 namespace Ui {
 class MainWindow;
@@ -27,6 +28,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    void fillTable(QListWidget* list, std::vector<std::vector<int>> routes);
 };
 
 #endif // MAINWINDOW_H

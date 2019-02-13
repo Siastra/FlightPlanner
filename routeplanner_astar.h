@@ -33,12 +33,10 @@ struct PriorityQueue {
 class Routeplanner_astar {
 public:
     Routeplanner_astar(DbManager *db);
-    void init(DrawableMapWidget* dw, QTableView* flighttable);
     std::vector<std::vector<int>> get_routes(int from, int to);
     int get_min_hops(int from, int to);
 private:
-    DbManager *db;
-    DrawableMapWidget* _dw;
+    DbManager *db = new DbManager();
     QTableView* _flighttable;
     void get_connected_airports();
     double get_distance(int airport1, int airport2);

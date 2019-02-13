@@ -22,8 +22,10 @@ public:
     std::tuple<int, double, double> getLatLongOfAirport(int airport_id);
 
     QList<std::tuple<int, int, int>> getLatLongOfAllAirports();
-    u_int getAirportCount();
-    u_int getAirportIdFromInput(std::string input);
+    int getAirportCount();
+    int getAirportIdFromInput(std::string input);
+
+    std::string getIataForID(int id);
 private:
     QSqlDatabase m_db;
 };

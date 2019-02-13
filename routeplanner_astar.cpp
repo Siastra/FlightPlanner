@@ -5,11 +5,6 @@ Routeplanner_astar::Routeplanner_astar(DbManager *db) {
     this->get_connected_airports();
 }
 
-void Routeplanner_astar::init(DrawableMapWidget *dw, QTableView* flighttable){
-    this->_dw = dw;
-    this->_flighttable = flighttable;
-}
-
 void Routeplanner_astar::get_connected_airports() {
     int airports{this->db->getAirportCount()};
     this->conn_airpots.resize(airports);

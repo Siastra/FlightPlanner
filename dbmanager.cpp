@@ -94,7 +94,7 @@ std::tuple<int, double, double> DbManager::getLatLongOfAirport(int airport_id) {
     return ret.at(0);
 }
 
-u_int DbManager::getAirportIdFromInput(std::string input)
+int DbManager::getAirportIdFromInput(std::string input)
 {
     auto iata{input.substr(input.size() - 4, 3)};
 
@@ -107,7 +107,18 @@ u_int DbManager::getAirportIdFromInput(std::string input)
     return query.value(col).toInt();
 }
 
-u_int DbManager::getAirportCount()
+std::string DbManager::getIataForID(int id)
+{
+    QSqlQuery query;
+    query.prepare("select iata from Airport where id = :id");
+    query.bindValue(":id", id);
+    query.exec();
+
+    query.next();
+    return query.value(0).toString().toStdString();
+}
+
+int DbManager::getAirportCount()
 {
     QSqlQuery query("SELECT count(*) FROM Airport;");
     query.next();

@@ -24,8 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
     completerAp->setMaxVisibleItems(20);
     ui->FromSearch->setCompleter(completerAp);
     ui->ToSearch->setCompleter(completerAp);
-
-    rpl.init(ui->map, ui->flighttable);
 }
 
 MainWindow::~MainWindow()
@@ -41,6 +39,26 @@ void MainWindow::on_pushButton_clicked()
     //std::cout << rpl.get_min_hops(4908, 3699) << std::endl;  // vienna to palm springs (should be 4 hops)
     std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
 
+    auto routes = rpl.get_routes(from_id, to_id);
+    ui->map->connectTheDots(routes);
+
+    fillTable(ui->flighttable, routes);
+
     //auto routes{rpl.get_routes(from_id, to_id)};
     //rpl.print_list_list(routes);
+}
+
+void MainWindow::fillTable(QListWidget *list, std::vector<std::vector<int> > routes)
+{
+    list->clear();
+    DbManager dbm;
+
+    for (auto route : routes) {
+        std::string s{""};
+        for (size_t i{0}; i < route.size() - 1; i++) {
+            s += dbm.getIataForID(route[i]) + " -> ";
+        }
+        s += dbm.getIataForID(route[route.size() - 1]);
+        list->addItem(QString{s.c_str()});
+    }
 }
