@@ -72,12 +72,26 @@ QStringList DbManager::getAllAirportNames() {
 QList<std::tuple<int, int, int>> DbManager::getLatLongOfAllAirports()
 {
     QList<std::tuple<int, int, int>> ret;
-    QSqlQuery query("SELECT id, latitude, longitude from Airport order by id asc;");
+    QSqlQuery query("SELECT id, latitude, longitude from Airport;");
 
     while (query.next()) {
-        ret.push_back(std::make_tuple<int, int, int>(query.value("id").toInt(), query.value("latitude").toInt(), query.value("longitude").toInt()));
+        ret.push_back(std::make_tuple<int, int, int>(query.value("id").toInt(), query.value("latitude").toInt(), query.value("longitude").toInt()));  // Lat und Long zu int???
     }
     return ret;
+}
+
+std::tuple<int, double, double> DbManager::getLatLongOfAirport(int airport_id) {
+    QSqlQuery query(QString::fromStdString("SELECT id, latitude, longitude from Airport where id = " + std::to_string(airport_id) + ";"));
+    int id = query.record().indexOf("id");
+    int latitude = query.record().indexOf("latitude");
+    int longitude = query.record().indexOf("longitude");
+
+    QList<std::tuple<int, double, double>> ret;
+    while (query.next()) {
+        ret.push_back(std::make_tuple<int, double, double>(query.value(id).toInt(), query.value(latitude).toDouble(), query.value(longitude).toDouble()));
+    }
+
+    return ret.at(0);
 }
 
 u_int DbManager::getAirportIdFromInput(std::string input)

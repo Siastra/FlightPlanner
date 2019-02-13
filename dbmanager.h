@@ -8,6 +8,7 @@
 #include <QtDebug>
 #include <vector>
 #include <QStringList>
+#include <string>
 
 class DbManager
 {
@@ -18,6 +19,7 @@ public:
     QString getAirportName(QString id);
     QStringList getAllAirlineNames();
     QStringList getAllAirportNames();
+    std::tuple<int, double, double> getLatLongOfAirport(int airport_id);
 
     QList<std::tuple<int, int, int>> getLatLongOfAllAirports();
     u_int getAirportCount();

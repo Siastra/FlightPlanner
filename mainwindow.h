@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "dbmanager.h"
-#include "routeplanner.h"
+#include "routeplanner_astar.h"
 #include "drawablemapwidget.h"
 #include <iostream>
 
@@ -20,7 +20,7 @@ public:
     ~MainWindow();
 
     DbManager dbm;
-    RoutePlanner rpl;
+    Routeplanner_astar rpl;
 
 private slots:
     void on_pushButton_clicked();
