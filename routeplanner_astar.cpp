@@ -54,8 +54,17 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes(int from, int to) {
         routes_unsorted.erase( std::unique( routes_unsorted.begin(), routes_unsorted.end() ), routes_unsorted.end() );
         std::vector<std::vector<int>> filtered;
         filtered.reserve(routes_unsorted.size());
+
+        // if only distance and not hops matter, remove the foreach loop
+        int shortest = fastest.at(0).size();
         foreach (auto route, routes_unsorted) {
-            if (route.size() == fastest.at(0).size()) {
+            if (route.size() < shortest) {
+                shortest = route.size();
+            }
+        }
+
+        foreach (auto route, routes_unsorted) {
+            if (route.size() == shortest) {
                 filtered.push_back(route);
             }
         }
@@ -126,14 +135,16 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes_rec(int from, int t
                 routes.push_back(route);
             }
         }
-        step = steps_before;
-        int tmp = current;
-        while (tmp != from) {
-          tmp = came_from[tmp];
-          step += 1;
-        }
-        if (step > fastest_route - 1 && fastest_route != -1) {
-          return routes;
+        if (fastest_route != -1) {
+            step = steps_before;
+            int tmp = current;
+            while (tmp != from) {
+              tmp = came_from[tmp];
+              step += 1;
+            }
+            if (step > fastest_route - 1 && fastest_route != -1) {
+              return routes;
+            }
         }
       }
     }
