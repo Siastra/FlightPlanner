@@ -34,8 +34,6 @@ int Routeplanner_astar::get_min_hops(int from, int to) {
 }
 
 double Routeplanner_astar::get_distance(int airport1, int airport2) {
-    //auto airport1_pos = this->db->getLatLongOfAirport(airport1);
-    //auto airport2_pos = this->db->getLatLongOfAirport(airport2);
     auto airport1_pos = this->pos_airports.at(airport1-1);
     auto airport2_pos = this->pos_airports.at(airport2-1);
     return calcCrow(std::get<1>(airport1_pos), std::get<2>(airport1_pos), std::get<1>(airport2_pos), std::get<2>(airport2_pos));
@@ -43,9 +41,16 @@ double Routeplanner_astar::get_distance(int airport1, int airport2) {
 
 std::vector<std::vector<int>> Routeplanner_astar::get_routes(int from, int to) {
     std::vector<std::vector<int>> fastest = this->get_routes_rec(from, to, 1, -1, 0);
-    std::vector<std::vector<int>> routes_unsorted = this->get_routes_rec(from, to, 1, fastest.at(0).size(), 0);
-    routes_unsorted.push_back(fastest);
-    return routes_unsorted;
+    if (fastest.size() != 0) {
+        std::vector<std::vector<int>> routes_unsorted = this->get_routes_rec(from, to, 1, fastest.at(0).size(), 0);
+        routes_unsorted.push_back(fastest.at(0));
+        std::sort( routes_unsorted.begin(), routes_unsorted.end() );
+        routes_unsorted.erase( std::unique( routes_unsorted.begin(), routes_unsorted.end() ), routes_unsorted.end() );
+
+        return routes_unsorted;
+    } else {
+        return fastest;
+    }
 }
 
 std::vector<std::vector<int>> Routeplanner_astar::get_routes_rec(int from, int to, int rec_layer, int fastest_route, int steps_before) {
@@ -85,15 +90,15 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes_rec(int from, int t
             std::vector<std::vector<int>> new_routes_fixed;
 
             std::vector<int> tmp_path;
-            int current = next;
+            int current_tmp = next;
             bool flag = true;
-            while (current != from) {
+            while (current_tmp != from) {
                 if (flag) {
                     flag = false;
                 } else {
-                    tmp_path.push_back(current);
+                    tmp_path.push_back(current_tmp);
                 }
-              current = came_from[current];
+              current_tmp = came_from[current_tmp];
             }
 
             tmp_path.push_back(from);
