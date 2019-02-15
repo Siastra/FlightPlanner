@@ -1,7 +1,14 @@
+/*
+ * Author: Königsreiter Simon, Klimont Joel, Lampalzer Alexander, Glavanits Marcel
+ * Class: 5BHIF
+ * Date: 14.02.2019
+ */
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QStringList>
 #include <QCompleter>
+#include <algorithm>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -40,8 +47,13 @@ void MainWindow::on_pushButton_clicked()
     //std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
 
     auto routes = rpl.get_routes(from_id, to_id);
+    size_t min = 1000;
+    for (auto route : routes) {
+        if (route.size() < min) {
+            min = route.size();
+        }
+    }
     ui->map->connectTheDots(routes);
-
     fillTable(ui->flighttable, routes);
 
     //auto routes{rpl.get_routes(from_id, to_id)};

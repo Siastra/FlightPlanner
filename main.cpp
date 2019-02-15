@@ -1,3 +1,9 @@
+/*
+ * Author: Königsreiter Simon, Klimont Joel, Lampalzer Alexander, Glavanits Marcel
+ * Class: 5BHIF
+ * Date: 14.02.2019
+ */
+
 #include "mainwindow.h"
 #include <QApplication>
 

@@ -1,3 +1,9 @@
+#/*
+# * Author: Königsreiter Simon, Klimont Joel, Lampalzer Alexander, Glavanits Marcel
+# * Class: 5BHIF
+# * Date: 14.02.2019
+# */
+
 #-------------------------------------------------
 #
 # Project created by QtCreator 2019-01-28T11:54:56
