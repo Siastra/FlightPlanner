@@ -46,8 +46,14 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes(int from, int to) {
         routes_unsorted.push_back(fastest.at(0));
         std::sort( routes_unsorted.begin(), routes_unsorted.end() );
         routes_unsorted.erase( std::unique( routes_unsorted.begin(), routes_unsorted.end() ), routes_unsorted.end() );
-
-        return routes_unsorted;
+        std::vector<std::vector<int>> filtered;
+        filtered.reserve(routes_unsorted.size());
+        foreach (auto route, routes_unsorted) {
+            if (route.size() == fastest.at(0).size()) {
+                filtered.push_back(route);
+            }
+        }
+        return filtered;
     } else {
         return fastest;
     }
