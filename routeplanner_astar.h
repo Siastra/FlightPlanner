@@ -6,8 +6,12 @@
 #include <math.h>
 #include <queue>
 #include <unordered_map>
+#include <tuple>
+#include <set>
 #include "dbmanager.h"
 #include "drawablemapwidget.h"
+
+#include <iostream> // TODO: remove later
 
 template<typename T, typename priority_t>
 struct PriorityQueue {
@@ -38,8 +42,11 @@ public:
 private:
     DbManager *db = new DbManager();
     QTableView* _flighttable;
+    std::vector<std::vector<int>> get_routes_rec(int from, int to, int rec_layer, int fastest_route, int steps_before);
     void get_connected_airports();
+    void get_positions_airports();
     double get_distance(int airport1, int airport2);
+    std::vector<std::tuple<int, double, double>> pos_airports;
     std::vector<std::vector<int>> conn_airpots;
     double toRad(double value);
     double calcCrow(double lat1, double lon1, double lat2, double lon2);

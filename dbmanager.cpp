@@ -80,6 +80,20 @@ QList<std::tuple<int, int, int>> DbManager::getLatLongOfAllAirports()
     return ret;
 }
 
+std::vector<std::tuple<int, double, double>> DbManager::getLatLongOfAllAirports_double() {
+    std::vector<std::tuple<int, double, double>> ret;
+    ret.reserve(5611);
+    QSqlQuery query("SELECT id, latitude, longitude from Airport order by id asc;");
+    int id = query.record().indexOf("id");
+    int latitude = query.record().indexOf("latitude");
+    int longitude = query.record().indexOf("longitude");
+
+    while (query.next()) {
+        ret.push_back(std::make_tuple<int, double, double>(query.value(id).toInt(), query.value(latitude).toDouble(), query.value(longitude).toDouble()));
+    }
+    return ret;
+}
+
 std::tuple<int, double, double> DbManager::getLatLongOfAirport(int airport_id) {
     QSqlQuery query(QString::fromStdString("SELECT id, latitude, longitude from Airport where id = " + std::to_string(airport_id) + ";"));
     int id = query.record().indexOf("id");
