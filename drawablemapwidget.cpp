@@ -26,7 +26,7 @@ void DrawableMapWidget::paintEvent(QPaintEvent*)
 
 std::tuple<int, int> DrawableMapWidget::latLonToImg(int lat, int lon)
 {
-    return std::make_tuple<int, int>((lat - 90) * -2, (lon + 180) * 2);
+    return std::make_tuple<int, int>((lat - 90) * -4, (lon + 180) * 4);
 }
 
 std::tuple<int, int> DrawableMapWidget::latLonToImg(std::tuple<int, int, int> inp)
@@ -39,7 +39,7 @@ void DrawableMapWidget::connectTheDots(std::vector<std::vector<int> > routes)
     resetPic();
     auto airports = DbManager{}.getLatLongOfAllAirports();
     QPainter painter{&pic};
-    painter.setPen(QPen{QBrush{QColor{82, 82, 255}}, 5});
+    painter.setPen(QPen{QBrush{QColor{82, 82, 255}}, 3});
 
     for (auto route : routes) {
         for (size_t i{1}; i < route.size(); i++) {
@@ -59,14 +59,14 @@ void DrawableMapWidget::connectTheDots(std::vector<std::vector<int> > routes)
 
 void DrawableMapWidget::resetPic()
 {
-    QPixmap l_pic{720, 360};
+    QPixmap l_pic{1440, 720};
     DbManager dbm;
     QPainter painter(&l_pic);
     QPixmap map(":/static/Earthmap.jpg");
-
+    map = map.scaled(1440, 720 , Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     painter.drawPixmap(0, 0, map);
 
-    painter.setPen(QPen{QBrush{QColor{0, 255, 0, 200}}, 2});
+    painter.setPen(QPen{QBrush{QColor{0, 255, 0, 200}}, 3});
 
     auto airports = dbm.getLatLongOfAllAirports();
     for (auto airport : airports) {

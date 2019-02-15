@@ -46,6 +46,7 @@ void MainWindow::on_pushButton_clicked()
     //std::cout << rpl.get_min_hops(4908, 3699) << std::endl;  // vienna to palm springs (should be 4 hops)
     //std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
 
+    std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
     auto routes = rpl.get_routes(from_id, to_id);
     size_t min = 1000;
     for (auto route : routes) {
