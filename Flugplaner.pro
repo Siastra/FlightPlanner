@@ -40,17 +40,13 @@ SOURCES += \
         mainwindow.cpp \
     dbmanager.cpp \
     drawablemapwidget.cpp \
-    routeplanner.cpp \
     routeplanner_astar.cpp
-    routeplanner.cpp
 
 HEADERS += \
         mainwindow.h \
     dbmanager.h \
     drawablemapwidget.h \
-    routeplanner.h \
     routeplanner_astar.h
-    routeplanner.h
 
 FORMS += \
         mainwindow.ui
