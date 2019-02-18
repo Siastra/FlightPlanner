@@ -9,6 +9,7 @@
 #include <QStringList>
 #include <QCompleter>
 #include <algorithm>
+#include <QRegularExpression>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -40,25 +41,30 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    auto from_id{dbm.getAirportIdFromInput(ui->FromSearch->text().toStdString())};
-    auto to_id{dbm.getAirportIdFromInput(ui->ToSearch->text().toStdString())};
-
-    //std::cout << rpl.get_min_hops(4908, 3699) << std::endl;  // vienna to palm springs (should be 4 hops)
-    //std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
-
-    std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
-    auto routes = rpl.get_routes(from_id, to_id);
-    size_t min = 1000;
-    for (auto route : routes) {
-        if (route.size() < min) {
-            min = route.size();
+    try {
+        if (ui->FromSearch->text().toStdString() == "" && ui->ToSearch->text().toStdString() == "") {
+            return;
         }
-    }
-    ui->map->connectTheDots(routes);
-    fillTable(ui->flighttable, routes);
+        auto from_id{dbm.getAirportIdFromInput(ui->FromSearch->text().toStdString())};
+        auto to_id{dbm.getAirportIdFromInput(ui->ToSearch->text().toStdString())};
 
-    //auto routes{rpl.get_routes(from_id, to_id)};
-    //rpl.print_list_list(routes);
+        //std::cout << rpl.get_min_hops(4908, 3699) << std::endl;  // vienna to palm springs (should be 4 hops)
+        //std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
+
+        std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
+        auto routes = rpl.get_routes(from_id, to_id);
+        size_t min = 1000;
+        for (auto route : routes) {
+            if (route.size() < min) {
+                min = route.size();
+            }
+        }
+        ui->map->connectTheDots(routes);
+        fillTable(ui->flighttable, routes);
+
+        //auto routes{rpl.get_routes(from_id, to_id)};
+        //rpl.print_list_list(routes);
+    } catch (...) {}
 }
 
 void MainWindow::fillTable(QListWidget *list, std::vector<std::vector<int> > routes)
@@ -74,4 +80,22 @@ void MainWindow::fillTable(QListWidget *list, std::vector<std::vector<int> > rou
         s += dbm.getIataForID(route[route.size() - 1]);
         list->addItem(QString{s.c_str()});
     }
+}
+
+void MainWindow::on_flighttable_itemClicked(QListWidgetItem *item)
+{
+    std::vector<int> route;
+    DbManager dbm{};
+    auto parts = item->text().split("->");
+    QRegularExpression re("(?<iata>\\w+).*");
+    for (auto part : parts) {
+        auto match = re.match(part.simplified());
+        if (match.hasMatch()) {
+            route.push_back(dbm.getAirportIDForIATA(match.captured("iata")));
+        }
+    }
+
+    std::vector<std::vector<int>> tmp;
+    tmp.push_back(route);
+    ui->map->connectTheDots(tmp);
 }

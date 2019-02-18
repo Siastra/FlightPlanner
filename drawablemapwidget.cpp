@@ -66,6 +66,9 @@ void DrawableMapWidget::connectTheDots(std::vector<std::vector<int>> routes)
     resetPic();
     auto airports = DbManager{}.airports;
     QPainter painter{&pic};
+    QPen selected_flight{Qt::red, 3};
+    QPen alliance_flight{Qt::blue, 3};
+    QPen every_flight{Qt::gray, 3};
     painter.setPen(QPen{QBrush{QColor{82, 82, 255}}, 3});
 
     for (auto route : routes) {
