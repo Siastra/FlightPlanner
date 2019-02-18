@@ -9,6 +9,7 @@
 #include <QStringList>
 #include <QCompleter>
 #include <algorithm>
+#include <QRegularExpression>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -83,9 +84,18 @@ void MainWindow::fillTable(QListWidget *list, std::vector<std::vector<int> > rou
 
 void MainWindow::on_flighttable_itemClicked(QListWidgetItem *item)
 {
+    std::vector<int> route;
+    DbManager dbm{};
     auto parts = item->text().split("->");
+    QRegularExpression re("(?<iata>\\w+).*");
     for (auto part : parts) {
-        part = part.simplified();
-        qDebug() << part;
+        auto match = re.match(part.simplified());
+        if (match.hasMatch()) {
+            route.push_back(dbm.getAirportIDForIATA(match.captured("iata")));
+        }
     }
+
+    std::vector<std::vector<int>> tmp;
+    tmp.push_back(route);
+    ui->map->connectTheDots(tmp);
 }

@@ -127,6 +127,17 @@ int DbManager::getAirportIdFromInput(std::string input)
     return query.value(col).toInt();
 }
 
+int DbManager::getAirportIDForIATA(QString iata)
+{
+    QSqlQuery query;
+    query.prepare("select id from Airport where iata = :iata");
+    query.bindValue(":iata", iata);
+    query.exec();
+
+    query.next();
+    return query.value(0).toInt();
+}
+
 std::string DbManager::getIataForID(int id)
 {
     QSqlQuery query;
