@@ -50,7 +50,16 @@ void DrawableMapWidget::connectTheDots(std::vector<std::vector<int> > routes)
             QPoint to{std::get<1>(to_tuple), std::get<0>(to_tuple)};
 
             painter.drawLine(from, to);
+        }
+    }
 
+    painter.setPen(Qt::black);
+    for (auto route : routes) {
+        for (auto airport : route) {
+            auto tpl = latLonToImg(airports[airport - 1]);
+            QPoint pnt{std::get<1>(tpl) - 15, std::get<0>(tpl) - 7};
+
+            painter.drawText(pnt, DbManager{}.getIataForID(airport - 1).c_str());
         }
     }
 
@@ -73,7 +82,6 @@ void DrawableMapWidget::resetPic()
         auto img_coord = latLonToImg(airport);
         int lat = std::get<0>(img_coord);
         int lon = std::get<1>(img_coord);
-
         painter.drawPoint(QPoint{lon, lat});
     }
 
