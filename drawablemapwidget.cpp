@@ -32,13 +32,16 @@ std::tuple<int, int> DrawableMapWidget::latLonToImg(int lat, int lon)
 std::tuple<int, int> DrawableMapWidget::latLonToImg(std::tuple<int, int, int> inp)
 {
     return latLonToImg(std::get<1>(inp), std::get<2>(inp));
-}
 
+}
 void DrawableMapWidget::connectTheDots(std::vector<std::vector<int> > routes)
 {
     resetPic();
     auto airports = DbManager{}.getLatLongOfAllAirports();
     QPainter painter{&pic};
+    QPen selected_flight{Qt::red, 3};
+    QPen alliance_flight{Qt::blue, 3};
+    QPen every_flight{Qt::gray, 3};
     painter.setPen(QPen{QBrush{QColor{82, 82, 255}}, 3});
 
     for (auto route : routes) {
@@ -53,7 +56,7 @@ void DrawableMapWidget::connectTheDots(std::vector<std::vector<int> > routes)
         }
     }
 
-    painter.setPen(Qt::black);
+    painter.setPen(Qt::white);
     for (auto route : routes) {
         for (auto airport : route) {
             auto tpl = latLonToImg(airports[airport - 1]);
