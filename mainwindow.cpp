@@ -84,18 +84,23 @@ void MainWindow::fillTable(QListWidget *list, std::vector<std::vector<int> > rou
 
 void MainWindow::on_flighttable_itemClicked(QListWidgetItem *item)
 {
-    std::vector<int> route;
-    DbManager dbm{};
-    auto parts = item->text().split("->");
-    QRegularExpression re("(?<iata>\\w+).*");
-    for (auto part : parts) {
-        auto match = re.match(part.simplified());
-        if (match.hasMatch()) {
-            route.push_back(dbm.getAirportIDForIATA(match.captured("iata")));
+    if (selItem == item) {
+        on_pushButton_clicked();
+    }else{
+        std::vector<int> route;
+        DbManager dbm{};
+        auto parts = item->text().split("->");
+        QRegularExpression re("(?<iata>\\w+).*");
+        for (auto part : parts) {
+            auto match = re.match(part.simplified());
+            if (match.hasMatch()) {
+                route.push_back(dbm.getAirportIDForIATA(match.captured("iata")));
+            }
         }
-    }
 
-    std::vector<std::vector<int>> tmp;
-    tmp.push_back(route);
-    ui->map->connectTheDots(tmp);
+        std::vector<std::vector<int>> tmp;
+        tmp.push_back(route);
+        ui->map->connectTheDots(tmp);
+        selItem = item;
+    }
 }

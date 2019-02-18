@@ -31,6 +31,8 @@ QPoint DrawableMapWidget::latLonToPoint(double lat, double lon)
                   (lat - 90.0) * -4.0);
 }
 
+
+
 void DrawableMapWidget::connectAirports(Airport fromAP, Airport toAP, QPainter &painter)
 {
     auto directDistance = abs(fromAP.lon - toAP.lon);
@@ -61,6 +63,20 @@ void DrawableMapWidget::connectAirports(Airport fromAP, Airport toAP, QPainter &
     }
 }
 
+void DrawableMapWidget::drawIatas(Airport from, Airport to, QPainter &painter) {
+    painter.setPen(Qt::black);
+    QPoint toPnt = latLonToPoint(to.lat, to.lon);
+    toPnt.setX(toPnt.x() - 15);
+    toPnt.setY(toPnt.y() - 7);
+
+    QPoint fromPnt = latLonToPoint(from.lat, from.lon);
+    fromPnt.setX(fromPnt.x() - 15);
+    fromPnt.setY(fromPnt.y() - 7);
+
+    painter.drawText(fromPnt, from.iata.toStdString().c_str());
+    painter.drawText(toPnt, to.iata.toStdString().c_str());
+}
+
 void DrawableMapWidget::connectTheDots(std::vector<std::vector<int>> routes)
 {
     resetPic();
@@ -71,12 +87,15 @@ void DrawableMapWidget::connectTheDots(std::vector<std::vector<int>> routes)
     QPen every_flight{Qt::gray, 3};
     painter.setPen(QPen{QBrush{QColor{82, 82, 255}}, 3});
 
+    painter.setPen(Qt::black);
     for (auto route : routes) {
         for (size_t i{0}; i < route.size() - 1; i++) {
             Airport fromAP = airports[route[i]];
             Airport toAP = airports[route[i + 1]];
 
             connectAirports(fromAP, toAP, painter);
+
+            drawIatas(fromAP, toAP, painter);
         }
     }
 

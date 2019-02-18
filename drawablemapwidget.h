@@ -33,6 +33,7 @@ private:
     QPixmap pic;
 
     void connectAirports(Airport from, Airport to, QPainter &painter);
+    void drawIatas(Airport from, Airport to, QPainter &painter);
     void resetPic();
 };
 

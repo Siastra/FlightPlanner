@@ -36,7 +36,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
+    QListWidgetItem* selItem;
     void fillTable(QListWidget* list, std::vector<std::vector<int>> routes);
 };
 
