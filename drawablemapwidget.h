@@ -10,6 +10,7 @@
 #include <QWidget>
 #include "dbmanager.h"
 #include <QApplication>
+#include "airport.h"
 
 class DrawableMapWidget : public QWidget
 {
@@ -18,11 +19,12 @@ public:
     explicit DrawableMapWidget(QWidget *parent = nullptr);
 
     void paintEvent(QPaintEvent* e);
-    std::tuple<int, int> latLonToImg(int lat, int lon);
-    std::tuple<int, int> latLonToImg(std::tuple<int, int, int> inp);
+    std::tuple<double, double> latLonToImg(double lat, double lon);
+    std::tuple<double, double> latLonToImg(std::tuple<double, double, double> inp);
 
     void connectTheDots(std::vector<std::vector<int>> routes);
 
+    QPoint latLonToPoint(double lat, double lon);
 signals:
 
 public slots:
@@ -30,6 +32,7 @@ public slots:
 private:
     QPixmap pic;
 
+    void connectAirports(Airport from, Airport to, QPainter &painter);
     void resetPic();
 };
 

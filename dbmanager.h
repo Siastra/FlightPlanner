@@ -16,6 +16,7 @@
 #include <tuple>
 #include <QStringList>
 #include <string>
+#include "airport.h"
 
 class DbManager
 {
@@ -33,6 +34,11 @@ public:
     int getAirportIdFromInput(std::string input);
 
     std::string getIataForID(int id);
+    std::string getNameForID(int id);
+
+    std::vector<Airport> airports;
+    void loadAirports();
+
 private:
     QSqlDatabase m_db;
 };

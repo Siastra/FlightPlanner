@@ -13,7 +13,7 @@
 
 DbManager::DbManager()
 {
-
+   loadAirports();
 }
 
 DbManager::DbManager(const QString& path)
@@ -30,6 +30,8 @@ DbManager::DbManager(const QString& path)
    {
       qDebug() << "Database: connection ok";
    }
+
+   loadAirports();
 }
 
 std::vector<std::vector<QString>> DbManager::getAllRoutes() {
@@ -147,3 +149,34 @@ int DbManager::getAirportCount()
     return query.value(col).toInt();
 }
 
+std::string DbManager::getNameForID(int id) {
+    QSqlQuery query;
+    query.prepare("select name from Airport where id = :id");
+    query.bindValue(":id", id);
+    query.exec();
+
+    query.next();
+    return query.value(0).toString().toStdString();
+}
+
+void DbManager::loadAirports()
+{
+    airports.resize(getAirportCount() + 1);
+    QSqlQuery query;
+    query.prepare("select * from airport");
+    query.exec();
+
+    auto idCol = query.record().indexOf("id");
+    auto latitudeCol = query.record().indexOf("latitude");
+    auto longitudeCol = query.record().indexOf("longitude");
+    auto nameCol = query.record().indexOf("name");
+    auto iataCol = query.record().indexOf("iata");
+
+    while (query.next())
+    {
+        auto id{query.value(idCol).toInt()};
+        airports.at(id) = Airport(id,
+                                  query.value(latitudeCol).toDouble(), query.value(longitudeCol).toDouble(),
+                                  query.value(nameCol).toString().simplified(), query.value(iataCol).toString());
+    }
+}

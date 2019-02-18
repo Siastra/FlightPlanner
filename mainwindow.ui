@@ -93,14 +93,14 @@
         <item row="3" column="1">
          <widget class="QLineEdit" name="ToSearch">
           <property name="text">
-           <string/>
+           <string>Palm Springs Municipal Apt(PSP)</string>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
          <widget class="QLineEdit" name="FromSearch">
           <property name="text">
-           <string/>
+           <string>Vienna(VIE)</string>
           </property>
          </widget>
         </item>
