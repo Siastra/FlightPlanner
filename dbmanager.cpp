@@ -4,16 +4,12 @@
  * Date: 14.02.2019
  */
 
-#include <vector>
-#include <iostream>
-
 #include "dbmanager.h"
-
-#include <QFile>
 
 DbManager::DbManager()
 {
    loadAirports();
+   loadRoutes();
 }
 
 DbManager::DbManager(const QString& path)
@@ -32,6 +28,7 @@ DbManager::DbManager(const QString& path)
    }
 
    loadAirports();
+   loadRoutes();
 }
 
 std::vector<std::vector<QString>> DbManager::getAllRoutes() {
@@ -142,13 +139,18 @@ int DbManager::getAirportIDForIATA(QString iata)
 
 std::string DbManager::getIataForID(int id)
 {
+    return airports.at(id).iata.toStdString();
+}
+
+Airline DbManager::getAirlineForID(int id)
+{
     QSqlQuery query;
-    query.prepare("select iata from Airport where id = :id");
+    query.prepare("select * from Airport where id = :id");
     query.bindValue(":id", id);
     query.exec();
 
     query.next();
-    return query.value(0).toString().toStdString();
+    return Airline(query.value(0).toInt(), query.value(1).toString(), query.value(2).toInt());
 }
 
 int DbManager::getAirportCount()
@@ -158,6 +160,19 @@ int DbManager::getAirportCount()
     int col{query.record().indexOf("count(*)")};
 
     return query.value(col).toInt();
+}
+
+int DbManager::getRouteCount()
+{
+    QSqlQuery query("SELECT count(*) FROM Route;");
+    query.next();
+    int col{query.record().indexOf("count(*)")};
+
+    return query.value(col).toInt();
+}
+
+Airport DbManager::getAirport(QVariant id) {
+    return airports.at(id.toInt());
 }
 
 std::string DbManager::getNameForID(int id) {
@@ -189,5 +204,23 @@ void DbManager::loadAirports()
         airports.at(id) = Airport(id,
                                   query.value(latitudeCol).toDouble(), query.value(longitudeCol).toDouble(),
                                   query.value(nameCol).toString().simplified(), query.value(iataCol).toString());
+    }
+}
+
+void DbManager::loadRoutes() {
+    routes.resize(getRouteCount() + 1);
+    QSqlQuery query;
+    query.prepare("select * from Route");
+    query.exec();
+
+    auto airlineCol = query.record().indexOf("airline");
+    auto airport1Col = query.record().indexOf("airport1");
+    auto airport2Col = query.record().indexOf("airport2");
+
+    size_t i = 0;
+    while (query.next())
+    {
+        routes.at(i) = Route(getAirport(query.value(airport1Col)), getAirport(query.value(airport2Col)), getAirlineForID(query.value(airlineCol).toInt()));
+        i++;
     }
 }

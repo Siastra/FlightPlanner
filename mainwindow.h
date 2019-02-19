@@ -13,6 +13,10 @@
 #include "drawablemapwidget.h"
 #include <iostream>
 #include <QListWidget>
+#include <QStringList>
+#include <QCompleter>
+#include <algorithm>
+#include <QRegularExpression>
 
 namespace Ui {
 class MainWindow;

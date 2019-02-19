@@ -6,10 +6,6 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QStringList>
-#include <QCompleter>
-#include <algorithm>
-#include <QRegularExpression>
 
 
 MainWindow::MainWindow(QWidget *parent) :

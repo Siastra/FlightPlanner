@@ -47,7 +47,9 @@ HEADERS += \
     dbmanager.h \
     drawablemapwidget.h \
     routeplanner_astar.h \
-    airport.h
+    airport.h \
+    airline.h \
+    route.h
 
 FORMS += \
         mainwindow.ui
