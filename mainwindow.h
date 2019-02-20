@@ -8,6 +8,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "ui_aboutdialog.h"
+#include "aboutdialog.h"
 #include "dbmanager.h"
 #include "routeplanner_astar.h"
 #include "drawablemapwidget.h"
@@ -39,7 +41,12 @@ private slots:
 
     void on_flighttable_itemClicked(QListWidgetItem *item);
 
+    void on_actionExit_triggered();
+
+    void on_actionAbout_triggered();
+
 private:
+    AboutDialog abd;
     Ui::MainWindow *ui;
     QListWidgetItem* selItem;
     void fillTable(QListWidget* list, std::vector<std::vector<int>> routes);

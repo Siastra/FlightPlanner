@@ -36,9 +36,10 @@ public:
     QList<std::tuple<int, int, int>> getLatLongOfAllAirports();
     int getAirportCount();
     int getRouteCount();
+    int getAirlineCount();
     int getAirportIdFromInput(std::string input);
     int getAirportIDForIATA(QString iata);
-    Airport getAirport(QVariant id);
+    Airport* getAirport(QVariant id);
     Airline getAirlineForID(int id);
 
     std::string getAirlineForRoute(int a1, int a2);
@@ -47,10 +48,12 @@ public:
     std::string getIataForID(int id);
     std::string getNameForID(int id);
 
-    std::vector<Airport> airports;
+    static std::vector<Airport> airports;
     static std::vector<Route> routes;
+    static std::vector <Airline> airlines;
     void loadAirports();
     void loadRoutes();
+    void loadAirlines();
 
 private:
     QSqlDatabase m_db;

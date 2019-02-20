@@ -45,6 +45,25 @@ double Routeplanner_astar::get_distance(int airport1, int airport2) {
     return calcCrow(std::get<1>(airport1_pos), std::get<2>(airport1_pos), std::get<1>(airport2_pos), std::get<2>(airport2_pos));
 }
 
+double Routeplanner_astar::get_route_distance(std::vector<int> route) {
+    double dist{0.0};
+    int id = route.at(0);
+    int nxt{0};
+    for (int i = 1; i < route.size(); ++i) {
+        nxt = route.at(i);
+        dist += this->get_distance(id, nxt);
+        id = nxt;
+    }
+    return dist;
+}
+
+std::vector<std::vector<int>> Routeplanner_astar::sort_routes_distance(std::vector<std::vector<int>> routes) {
+    std::sort(routes.begin(), routes.end(), [this](std::vector<int> &rt1, std::vector<int> &rt2) {
+        return this->get_route_distance(rt1) < this->get_route_distance(rt2);
+    });
+    return routes;
+}
+
 bool Routeplanner_astar::is_connected(int from, int to) {
     for (int route : this->conn_airpots[from]) {
         if (route == to) {

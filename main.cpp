@@ -7,7 +7,9 @@
 #include "mainwindow.h"
 #include <QApplication>
 
-std::vector<Route> DbManager::routes = std::vector<Route>();
+std::vector<Route> DbManager::routes;
+std::vector<Airline> DbManager::airlines;
+std::vector<Airport> DbManager::airports;
 
 int main(int argc, char *argv[])
 {

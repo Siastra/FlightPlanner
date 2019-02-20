@@ -10,11 +10,11 @@
 
 DbManager::DbManager()
 {
-    loadAirports();
 }
 
 DbManager::DbManager(const QString& path)
 {
+   DbManager::routes = std::vector<Route>();
    m_db = QSqlDatabase::addDatabase("QSQLITE");
    m_db.setDatabaseName(path);
    qDebug() << path;
@@ -28,6 +28,7 @@ DbManager::DbManager(const QString& path)
       qDebug() << "Database: connection ok";
    }
    loadAirports();
+   loadAirlines();
    loadRoutes();
 }
 
@@ -56,11 +57,7 @@ QStringList DbManager::getAllAirlineNames() {
 }
 
 QString DbManager::getAirportName(QString id){
-    std::vector<QString> result;
-    QSqlQuery query("SELECT name FROM Airport WHERE id = " + id + ";");
-    int nameC = query.record().indexOf("name");
-    query.next();
-    return query.value(nameC).toString().simplified().trimmed();
+    return airports.at(id.toInt()).name;
 }
 
 QStringList DbManager::getAllAirportNames() {
@@ -149,13 +146,7 @@ std::string DbManager::getIataForID(int id)
 
 Airline DbManager::getAirlineForID(int id)
 {
-    QSqlQuery query;
-    query.prepare("select * from Airport where id = :id");
-    query.bindValue(":id", id);
-    query.exec();
-
-    query.next();
-    return Airline(query.value(0).toInt(), query.value(1).toString(), query.value(2).toInt());
+    return airlines.at(id);
 }
 
 std::string DbManager::getAirlineForRoute(int a1, int a2)
@@ -195,6 +186,15 @@ int DbManager::getAirportCount()
     return query.value(col).toInt();
 }
 
+int DbManager::getAirlineCount()
+{
+    QSqlQuery query("SELECT count(*) FROM Airline;");
+    query.next();
+    int col{query.record().indexOf("count(*)")};
+
+    return query.value(col).toInt();
+}
+
 int DbManager::getRouteCount()
 {
     QSqlQuery query("SELECT count(*) FROM Route;");
@@ -204,18 +204,12 @@ int DbManager::getRouteCount()
     return query.value(col).toInt();
 }
 
-Airport DbManager::getAirport(QVariant id) {
-    return airports.at(id.toInt());
+Airport* DbManager::getAirport(QVariant id) {
+    return &airports.at(id.toInt());
 }
 
 std::string DbManager::getNameForID(int id) {
-    QSqlQuery query;
-    query.prepare("select name from Airport where id = :id");
-    query.bindValue(":id", id);
-    query.exec();
-
-    query.next();
-    return query.value(0).toString().toStdString();
+    return airports.at(id).name.toStdString();
 }
 
 void DbManager::loadAirports()
@@ -255,5 +249,23 @@ void DbManager::loadRoutes() {
     {
         DbManager::routes.at(i) = Route(getAirport(query.value(airport1Col)), getAirport(query.value(airport2Col)), getAirlineForID(query.value(airlineCol).toInt()));
         i++;
+    }
+}
+
+void DbManager::loadAirlines() {
+    DbManager::airlines.resize(getAirlineCount() + 1);
+    QSqlQuery query;
+    query.prepare("select * from airline");
+    query.exec();
+
+    auto idCol = query.record().indexOf("id");
+    auto nameCol = query.record().indexOf("name");
+    auto allianceCol = query.record().indexOf("alliance");
+
+    while (query.next())
+    {
+        auto id{query.value(idCol).toInt()};
+        airlines.at(id) = Airline(id,
+                                  query.value(nameCol).toString(), query.value(allianceCol).toInt());
     }
 }

@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     completerAp->setMaxVisibleItems(20);
     ui->FromSearch->setCompleter(completerAp);
     ui->ToSearch->setCompleter(completerAp);
+    abd.setWindowTitle("FlightPlanner - About");
 }
 
 MainWindow::~MainWindow()
@@ -61,7 +62,13 @@ void MainWindow::on_pushButton_clicked()
         // routes = routes_hops; // TODO COMMENT
         std::cout << "get_routes hops: " << elapsed_secs << std::endl;
 
-        //auto routes = rpl.get_routes(from_id, to_id);
+        // SORT ROUTES
+        begin = clock();
+        routes = rpl.sort_routes_distance(routes);
+        end = clock();
+        elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << "sorting " << routes.size() << " routes took: " << elapsed_secs << std::endl;
+
         size_t min = 1000;
         for (auto route : routes) {
             if (route.size() < min) {
@@ -70,9 +77,6 @@ void MainWindow::on_pushButton_clicked()
         }
         ui->map->connectTheDots(routes, ui->airlineSearch->text());
         fillTable(ui->flighttable, routes);
-
-        //auto routes{rpl.get_routes(from_id, to_id)};
-        //rpl.print_list_list(routes);
     } catch (...) {}
 }
 
@@ -112,4 +116,14 @@ void MainWindow::on_flighttable_itemClicked(QListWidgetItem *item)
         ui->map->connectTheDots(tmp, ui->airlineSearch->text());
         selItem = item;
     }
+}
+
+void MainWindow::on_actionExit_triggered()
+{
+    this->close();
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    abd.show();
 }
