@@ -47,29 +47,51 @@ void MainWindow::on_pushButton_clicked()
 
         // std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
 
+        std::vector<std::future<std::vector<std::vector<int>>>> routes_from_algo;
+        bool running = true;
+
         // A STAR ALGO
-        clock_t begin = clock();
-        auto routes = rpl.get_routes(from_id, to_id);  // UNCOMMENT FOR TESTING SECOND ALGO
-        clock_t end = clock();
-        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-        std::cout << "get_routes astar: " << elapsed_secs << std::endl;
+        routes_from_algo.push_back(std::async(std::launch::async, [&]{
+            clock_t begin = clock();
+            auto routes = rpl.get_routes(from_id, to_id, running);  // UNCOMMENT FOR TESTING SECOND ALGO
+            clock_t end = clock();
+            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+            std::cout << "get_routes astar: " << elapsed_secs << std::endl;
+            return routes;
+        }));
 
         // BREADTH FIRST SEARCH ALGO
-        begin = clock();
-        auto routes_hops = rpl.get_routes_hops(from_id, to_id);
-        end = clock();
-        elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-        routes = routes_hops; // TODO COMMENT
-        std::cout << "get_routes hops: " << elapsed_secs << std::endl;
+        routes_from_algo.push_back(std::async(std::launch::async, [&]{
+            clock_t begin = clock();
+            auto routes = rpl.get_routes_hops(from_id, to_id, running);
+            clock_t end = clock();
+            double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+            std::cout << "get_routes hops: " << elapsed_secs << std::endl;
+            return routes;
+        }));
 
-        // SORT ROUTES
-        begin = clock();
-        routes = rpl.sort_routes_distance(routes);
-        end = clock();
-        elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-        std::cout << "sorting " << routes.size() << " routes took: " << elapsed_secs << std::endl;
+        std::vector<std::vector<int>> routes;
+        int got_something = 0;
+        while (! got_something) {
+            for (int i = 0; i < routes_from_algo.size(); i++) {
+                if (routes_from_algo.at(i).wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+                    routes = routes_from_algo.at(i).get();
+                    got_something = i;
+                    running = false;
+                }
+            }
+        }
+        std::cout << "got something maybe or not" << std::endl;
 
         routes.push_back(rpl.get_fastest_route_astar(from_id, to_id));
+
+        // SORT ROUTES
+        clock_t begin = clock();
+        routes = rpl.sort_routes_distance(routes);
+        clock_t end = clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << "sorting " << routes.size() << " routes took: " << elapsed_secs << std::endl;
+
         routes.erase(std::unique( routes.begin(), routes.end()), routes.end());
 
         size_t min = 1000;

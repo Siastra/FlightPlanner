@@ -48,8 +48,8 @@ struct PriorityQueue {
 class Routeplanner_astar {
 public:
     Routeplanner_astar(DbManager *db);
-    std::vector<std::vector<int>> get_routes(int from, int to);
-    std::vector<std::vector<int>> get_routes_hops(int from, int to);
+    std::vector<std::vector<int>> get_routes(int from, int to, bool &running);
+    std::vector<std::vector<int>> get_routes_hops(int from, int to, bool &running);
     std::vector<std::vector<int>> sort_routes_distance(std::vector<std::vector<int>> routes);
     std::vector<int> get_fastest_route_astar(int form, int to);
     double get_route_distance(std::vector<int> route);
@@ -57,8 +57,8 @@ public:
 private:
     DbManager *db = new DbManager();
     QTableView* _flighttable;
-    std::vector<std::vector<int>> get_routes_rec(int from, int to, int rec_layer, int fastest_route, int steps_before);
-    std::vector<std::vector<int>> get_routes_hops_rec(std::vector<int> prev, int depth, int from, int to);
+    std::vector<std::vector<int>> get_routes_rec(int from, int to, int rec_layer, int fastest_route, int steps_before, bool &running);
+    std::vector<std::vector<int>> get_routes_hops_rec(std::vector<int> prev, int depth, int from, int to, bool &running);
     bool is_connected(int from, int to);
     void get_connected_airports();
     void get_positions_airports();

@@ -133,8 +133,10 @@ int DbManager::getAirportIDForIATA(QString iata)
     query.bindValue(":iata", iata);
     query.exec();
 
+    auto id = query.record().indexOf("id");
+
     query.next();
-    return query.value(0).toInt();
+    return query.value(id).toInt();
 }
 
 std::string DbManager::getIataForID(int id)
@@ -171,8 +173,9 @@ int DbManager::getAllianceForAirline(QString airline)
 
     query.exec();
     query.next();
+    query.first();
 
-    return query.value(0).toInt();
+    return query.value("coalesce(alliance, -1)").toInt();
 }
 
 int DbManager::getAirportCount()

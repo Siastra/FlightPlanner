@@ -31,9 +31,9 @@ void Routeplanner_astar::get_positions_airports() {
 }
 
 int Routeplanner_astar::get_min_hops(int from, int to) {
-    auto routes = this->get_routes(from, to);
+    auto routes = this->get_fastest_route_astar(from, to);
     if (routes.size()) {
-        return routes.at(0).size();
+        return routes.size();
     } else {
         return 0;
     }
@@ -72,19 +72,19 @@ bool Routeplanner_astar::is_connected(int from, int to) {
     }
 }
 
-std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops(int from, int to) {
+std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops(int from, int to, bool &running) {
     int depth{0};
 
     std::vector<std::vector<int>> routes;
     while (routes.size() == 0 && depth <= 4) {
-        routes = get_routes_hops_rec({from}, depth, from, to);
+        routes = get_routes_hops_rec({from}, depth, from, to, running);
         depth += 1;
      }
     std::cout << routes.size() << std::endl;
     return routes;
 }
 
-std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops_rec(std::vector<int> prev, int depth, int from, int to) {
+std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops_rec(std::vector<int> prev, int depth, int from, int to, bool &running) {
     std::vector<std::vector<int>> routes;
 
     if (depth == 0) {
@@ -98,6 +98,10 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops_rec(std::vecto
         std::vector<std::future<std::vector<std::vector<int>>>> fut_routes;
 
         for (auto &airport : conn_airps) {
+            if (! running) {
+                return routes;
+            }
+
             if (std::find(prev.begin(), prev.end(), airport) != prev.end()) {
                 continue;
             }
@@ -106,10 +110,10 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops_rec(std::vecto
             new_prev.push_back(airport);
 
             if (depth == 4) {
-                fut_routes.push_back(std::async(std::launch::async, &Routeplanner_astar::get_routes_hops_rec, this, new_prev, depth - 1, airport, to));
+                fut_routes.push_back(std::async(std::launch::async, &Routeplanner_astar::get_routes_hops_rec, this, new_prev, depth - 1, airport, to, std::ref(running)));
             }
             else {
-                auto toConcat = get_routes_hops_rec(new_prev, depth - 1, airport, to);
+                auto toConcat = get_routes_hops_rec(new_prev, depth - 1, airport, to, running);
                 if (toConcat.size() != 0) {
                     routes.insert(routes.end(), toConcat.begin(), toConcat.end());
                 }
@@ -165,10 +169,10 @@ std::vector<int> Routeplanner_astar::get_fastest_route_astar(int from, int to) {
     return path;
 }
 
-std::vector<std::vector<int>> Routeplanner_astar::get_routes(int from, int to) {
-    std::vector<std::vector<int>> fastest = this->get_routes_rec(from, to, 1, -1, 0);
+std::vector<std::vector<int>> Routeplanner_astar::get_routes(int from, int to, bool &running) {
+    std::vector<std::vector<int>> fastest = this->get_routes_rec(from, to, 1, -1, 0, running);
     if (fastest.size() != 0) {
-        std::vector<std::vector<int>> routes_unsorted = this->get_routes_rec(from, to, 1, fastest.at(0).size(), 0);
+        std::vector<std::vector<int>> routes_unsorted = this->get_routes_rec(from, to, 1, fastest.at(0).size(), 0, running);
         routes_unsorted.push_back(fastest.at(0));
         std::sort( routes_unsorted.begin(), routes_unsorted.end() );
         routes_unsorted.erase( std::unique( routes_unsorted.begin(), routes_unsorted.end() ), routes_unsorted.end() );
@@ -194,7 +198,7 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes(int from, int to) {
     }
 }
 
-std::vector<std::vector<int>> Routeplanner_astar::get_routes_rec(int from, int to, int rec_layer, int fastest_route, int steps_before) {
+std::vector<std::vector<int>> Routeplanner_astar::get_routes_rec(int from, int to, int rec_layer, int fastest_route, int steps_before, bool &running) {
     std::vector<std::vector<int>> routes;
 
     PriorityQueue<int, double> frontier;
@@ -220,6 +224,10 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes_rec(int from, int t
       }
 
       for (int next : conn_airpots[current]) {
+          if (! running) {
+              return routes;
+          }
+
         double new_cost = cost_so_far[current] + get_distance(current, next);
 
         if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next]) {
@@ -228,7 +236,7 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes_rec(int from, int t
           frontier.put(next, priority);
           came_from[next] = current;
         } else if (rec_layer <= 3 && fastest_route != -1) { // TODO check if airport is in came_from
-            std::vector<std::vector<int>> new_routes = this->get_routes_rec(next, to, rec_layer + 1, fastest_route, step+1);
+            std::vector<std::vector<int>> new_routes = this->get_routes_rec(next, to, rec_layer + 1, fastest_route, step+1, running);
             std::vector<std::vector<int>> new_routes_fixed;
 
             std::vector<int> tmp_path;
