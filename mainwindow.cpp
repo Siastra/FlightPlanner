@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     completerAp->setMaxVisibleItems(20);
     ui->FromSearch->setCompleter(completerAp);
     ui->ToSearch->setCompleter(completerAp);
+    abd.setWindowTitle("FlightPlanner - About");
 }
 
 MainWindow::~MainWindow()
@@ -109,4 +110,14 @@ void MainWindow::on_flighttable_itemClicked(QListWidgetItem *item)
         ui->map->connectTheDots(tmp);
         selItem = item;
     }
+}
+
+void MainWindow::on_actionExit_triggered()
+{
+    this->close();
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    abd.show();
 }

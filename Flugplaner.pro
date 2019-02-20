@@ -40,7 +40,8 @@ SOURCES += \
         mainwindow.cpp \
     dbmanager.cpp \
     drawablemapwidget.cpp \
-    routeplanner_astar.cpp
+    routeplanner_astar.cpp \
+    aboutdialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -49,10 +50,12 @@ HEADERS += \
     routeplanner_astar.h \
     airport.h \
     airline.h \
-    route.h
+    route.h \
+    aboutdialog.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    aboutdialog.ui
 
 # Copy DB File to executable
 
