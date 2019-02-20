@@ -61,7 +61,13 @@ void MainWindow::on_pushButton_clicked()
         // routes = routes_hops; // TODO COMMENT
         std::cout << "get_routes hops: " << elapsed_secs << std::endl;
 
-        //auto routes = rpl.get_routes(from_id, to_id);
+        // SORT ROUTES
+        begin = clock();
+        routes = rpl.sort_routes_distance(routes);
+        end = clock();
+        elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << "sorting " << routes.size() << " routes took: " << elapsed_secs << std::endl;
+
         size_t min = 1000;
         for (auto route : routes) {
             if (route.size() < min) {
