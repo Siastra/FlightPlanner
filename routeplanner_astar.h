@@ -15,6 +15,7 @@
 #include <tuple>
 #include <set>
 #include <future>
+#include <algorithm>
 #include "dbmanager.h"
 #include "drawablemapwidget.h"
 
@@ -46,6 +47,8 @@ public:
     Routeplanner_astar(DbManager *db);
     std::vector<std::vector<int>> get_routes(int from, int to);
     std::vector<std::vector<int>> get_routes_hops(int from, int to);
+    std::vector<std::vector<int>> sort_routes_distance(std::vector<std::vector<int>> routes);
+    double get_route_distance(std::vector<int> route);
     int get_min_hops(int from, int to);
 private:
     DbManager *db = new DbManager();
@@ -56,6 +59,7 @@ private:
     void get_connected_airports();
     void get_positions_airports();
     double get_distance(int airport1, int airport2);
+
     std::vector<std::tuple<int, double, double>> pos_airports;
     std::vector<std::vector<int>> conn_airpots;
     double toRad(double value);
