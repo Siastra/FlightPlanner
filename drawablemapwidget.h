@@ -19,11 +19,7 @@ public:
     explicit DrawableMapWidget(QWidget *parent = nullptr);
 
     void paintEvent(QPaintEvent* e);
-    std::tuple<double, double> latLonToImg(double lat, double lon);
-    std::tuple<double, double> latLonToImg(std::tuple<double, double, double> inp);
-
     void connectTheDots(std::vector<std::vector<int>> routes, QString airline = QString{});
-
     QPoint latLonToPoint(double lat, double lon);
 signals:
 
@@ -31,6 +27,7 @@ public slots:
 
 private:
     QPixmap pic;
+    DbManager dbm;
 
     void connectAirports(Airport from, Airport to, QPainter &painter);
     void drawIatas(Airport from, Airport to, QPainter &painter);

@@ -14,10 +14,8 @@ DbManager::DbManager()
 
 DbManager::DbManager(const QString& path)
 {
-   DbManager::routes = std::vector<Route>();
    m_db = QSqlDatabase::addDatabase("QSQLITE");
    m_db.setDatabaseName(path);
-   qDebug() << path;
 
    if (!m_db.open())
    {
@@ -26,10 +24,10 @@ DbManager::DbManager(const QString& path)
    else
    {
       qDebug() << "Database: connection ok";
+      loadAirports();
+      loadAirlines();
+      loadRoutes();
    }
-   loadAirports();
-   loadAirlines();
-   loadRoutes();
 }
 
 std::vector<std::vector<QString>> DbManager::getAllRoutes() {

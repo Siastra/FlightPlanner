@@ -80,7 +80,6 @@ void DrawableMapWidget::drawIatas(Airport from, Airport to, QPainter &painter) {
 void DrawableMapWidget::connectTheDots(std::vector<std::vector<int>> routes, QString airline)
 {
     resetPic();
-    DbManager dbm{};
     auto airports = dbm.airports;
     int alliance_id = dbm.getAllianceForAirline(airline);
     QPainter painter{&pic};

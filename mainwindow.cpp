@@ -86,7 +86,6 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::fillTable(QListWidget *list, std::vector<std::vector<int> > routes)
 {
     list->clear();
-    DbManager dbm;
 
     for (auto route : routes) {
         std::string s{""};
@@ -104,7 +103,6 @@ void MainWindow::on_flighttable_itemClicked(QListWidgetItem *item)
         on_pushButton_clicked();
     }else{
         std::vector<int> route;
-        DbManager dbm{};
         auto parts = item->text().split("->");
         QRegularExpression re("(?<iata>\\w+).*");
         for (auto part : parts) {
