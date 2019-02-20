@@ -5,10 +5,11 @@
  */
 
 #include "dbmanager.h"
+#include <QRegularExpression>
+#include <thread>
 
 DbManager::DbManager()
 {
-   loadAirports();
 }
 
 DbManager::DbManager(const QString& path)
@@ -26,7 +27,6 @@ DbManager::DbManager(const QString& path)
    {
       qDebug() << "Database: connection ok";
    }
-
    loadAirports();
    loadAirlines();
    loadRoutes();
@@ -66,7 +66,7 @@ QStringList DbManager::getAllAirportNames() {
     int name = query.record().indexOf("name");
     int iata = query.record().indexOf("iata");
     while ( query.next() ) {
-        result.push_back(QString(query.value(name).toString().simplified() + "(" +query.value(iata).toString() + ")"));
+        result.push_back(QString(query.value(name).toString().simplified() + " (" +query.value(iata).toString() + ")"));
     }
     return result;
 }
@@ -112,15 +112,20 @@ std::tuple<int, double, double> DbManager::getLatLongOfAirport(int airport_id) {
 
 int DbManager::getAirportIdFromInput(std::string input)
 {
-    auto iata{input.substr(input.size() - 4, 3)};
+    QRegularExpression re(".*\\((?<iata>\\w+)\\).*");
+    auto match = re.match(input.c_str());
 
-    QSqlQuery query("SELECT id FROM Airport where iata = \"" + QString::fromStdString(iata) + "\";");
-    query.next();
-    int col{query.record().indexOf("id")};
+    if (match.hasMatch()) {
 
-    std::cout << iata << " "  << query.value(col).toInt() << std::endl;
+        QSqlQuery query("SELECT id FROM Airport where iata = \"" + match.captured("iata") + "\";");
+        query.next();
+        int col{query.record().indexOf("id")};
 
-    return query.value(col).toInt();
+        std::cout << match.captured("iata").toStdString() << " "  << query.value(col).toInt() << std::endl;
+
+        return query.value(col).toInt();
+    }
+    return -1;
 }
 
 int DbManager::getAirportIDForIATA(QString iata)

@@ -44,8 +44,24 @@ void MainWindow::on_pushButton_clicked()
         auto from_id{dbm.getAirportIdFromInput(ui->FromSearch->text().toStdString())};
         auto to_id{dbm.getAirportIdFromInput(ui->ToSearch->text().toStdString())};
 
-        std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
-        auto routes = rpl.get_routes(from_id, to_id);
+        // std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
+
+        // A STAR ALGO
+        clock_t begin = clock();
+        //auto routes = rpl.get_routes(from_id, to_id);  // UNCOMMENT FOR TESTING SECOND ALGO
+        clock_t end = clock();
+        double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        std::cout << "get_routes astar: " << elapsed_secs << std::endl;
+
+        // BREADTH FIRST SEARCH ALGO
+        begin = clock();
+        auto routes = rpl.get_routes_hops(from_id, to_id);
+        end = clock();
+        elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+        // routes = routes_hops; // TODO COMMENT
+        std::cout << "get_routes hops: " << elapsed_secs << std::endl;
+
+        //auto routes = rpl.get_routes(from_id, to_id);
         size_t min = 1000;
         for (auto route : routes) {
             if (route.size() < min) {

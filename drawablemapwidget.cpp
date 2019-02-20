@@ -64,7 +64,7 @@ void DrawableMapWidget::connectAirports(Airport fromAP, Airport toAP, QPainter &
 }
 
 void DrawableMapWidget::drawIatas(Airport from, Airport to, QPainter &painter) {
-    painter.setPen(Qt::black);
+    painter.setPen(Qt::white);
     QPoint toPnt = latLonToPoint(to.lat, to.lon);
     toPnt.setX(toPnt.x() - 15);
     toPnt.setY(toPnt.y() - 7);
@@ -87,7 +87,6 @@ void DrawableMapWidget::connectTheDots(std::vector<std::vector<int>> routes)
     QPen every_flight{Qt::gray, 3};
     painter.setPen(QPen{QBrush{QColor{82, 82, 255}}, 3});
 
-    painter.setPen(Qt::black);
     for (auto route : routes) {
         for (size_t i{0}; i < route.size() - 1; i++) {
             Airport fromAP = airports[route[i]];
@@ -96,6 +95,8 @@ void DrawableMapWidget::connectTheDots(std::vector<std::vector<int>> routes)
             connectAirports(fromAP, toAP, painter);
 
             drawIatas(fromAP, toAP, painter);
+
+            painter.setPen(QPen{QBrush{QColor{82, 82, 255}}, 3});
         }
     }
 
