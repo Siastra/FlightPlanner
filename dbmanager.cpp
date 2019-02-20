@@ -5,11 +5,12 @@
  */
 
 #include "dbmanager.h"
+#include <QRegularExpression>
+#include <thread>
 
 DbManager::DbManager()
 {
-   loadAirports();
-   loadRoutes();
+    loadAirports();
 }
 
 DbManager::DbManager(const QString& path)
@@ -26,7 +27,6 @@ DbManager::DbManager(const QString& path)
    {
       qDebug() << "Database: connection ok";
    }
-
    loadAirports();
    loadRoutes();
 }
@@ -69,7 +69,7 @@ QStringList DbManager::getAllAirportNames() {
     int name = query.record().indexOf("name");
     int iata = query.record().indexOf("iata");
     while ( query.next() ) {
-        result.push_back(QString(query.value(name).toString().simplified() + "(" +query.value(iata).toString() + ")"));
+        result.push_back(QString(query.value(name).toString().simplified() + " (" +query.value(iata).toString() + ")"));
     }
     return result;
 }
@@ -115,15 +115,20 @@ std::tuple<int, double, double> DbManager::getLatLongOfAirport(int airport_id) {
 
 int DbManager::getAirportIdFromInput(std::string input)
 {
-    auto iata{input.substr(input.size() - 4, 3)};
+    QRegularExpression re(".*\\((?<iata>\\w+)\\).*");
+    auto match = re.match(input.c_str());
 
-    QSqlQuery query("SELECT id FROM Airport where iata = \"" + QString::fromStdString(iata) + "\";");
-    query.next();
-    int col{query.record().indexOf("id")};
+    if (match.hasMatch()) {
 
-    std::cout << iata << " "  << query.value(col).toInt() << std::endl;
+        QSqlQuery query("SELECT id FROM Airport where iata = \"" + match.captured("iata") + "\";");
+        query.next();
+        int col{query.record().indexOf("id")};
 
-    return query.value(col).toInt();
+        std::cout << match.captured("iata").toStdString() << " "  << query.value(col).toInt() << std::endl;
+
+        return query.value(col).toInt();
+    }
+    return -1;
 }
 
 int DbManager::getAirportIDForIATA(QString iata)
@@ -208,7 +213,7 @@ void DbManager::loadAirports()
 }
 
 void DbManager::loadRoutes() {
-    routes.resize(getRouteCount() + 1);
+    DbManager::routes.resize(getRouteCount() + 1);
     QSqlQuery query;
     query.prepare("select * from Route");
     query.exec();
@@ -220,7 +225,7 @@ void DbManager::loadRoutes() {
     size_t i = 0;
     while (query.next())
     {
-        routes.at(i) = Route(getAirport(query.value(airport1Col)), getAirport(query.value(airport2Col)), getAirlineForID(query.value(airlineCol).toInt()));
+        DbManager::routes.at(i) = Route(getAirport(query.value(airport1Col)), getAirport(query.value(airport2Col)), getAirlineForID(query.value(airlineCol).toInt()));
         i++;
     }
 }

@@ -45,7 +45,7 @@ public:
     std::string getNameForID(int id);
 
     std::vector<Airport> airports;
-    std::vector<Route> routes;
+    static std::vector<Route> routes;
     void loadAirports();
     void loadRoutes();
 

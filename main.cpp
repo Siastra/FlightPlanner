@@ -7,6 +7,8 @@
 #include "mainwindow.h"
 #include <QApplication>
 
+std::vector<Route> DbManager::routes = std::vector<Route>();
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
