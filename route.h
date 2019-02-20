@@ -13,15 +13,15 @@
 class Route
 {
 public:
-    Route(Airport _airportFrom, Airport _airportTo, Airline _airline) {
+    Route(Airport* _airportFrom, Airport* _airportTo, Airline _airline) {
         airportFrom = _airportFrom;
         airportTo = _airportTo;
         airline = _airline;
     }
     Route() {}
     Airline airline;
-    Airport airportFrom;
-    Airport airportTo;
+    Airport* airportFrom;
+    Airport* airportTo;
 };
 
 #endif // ROUTE_H
