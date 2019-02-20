@@ -124,6 +124,46 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops_rec(std::vecto
     return routes;
 }
 
+// very simple implementation of the a* algorithm, only returns one route (fastest by distance)
+std::vector<int> Routeplanner_astar::get_fastest_route_astar(int from, int to) {
+    PriorityQueue<int, double> frontier;
+    frontier.put(from, 0);
+    std::unordered_map<int, int> came_from;
+    std::unordered_map<int, double> cost_so_far;
+    came_from[from] = from;
+    cost_so_far[from] = 0;
+
+    while (!frontier.empty()) {
+      int current = frontier.get();
+      frontier.pop();
+
+      if (current == to) {
+        break;
+      }
+
+      for (int next : this->conn_airpots[current]) {
+        double new_cost = cost_so_far[current] + get_distance(current, next);
+        if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next]) {
+          cost_so_far[next] = new_cost;
+          double priority = new_cost + get_distance(next, to);  // comment "+ get_distance(next, to)" in order to get Dijkstra’s algorithm
+          frontier.put(next, priority);
+          came_from[next] = current;
+        }
+      }
+    }
+
+    std::vector<int> path;
+    int current = to;
+    while (current != from) {
+      path.push_back(current);
+      current = came_from[current];
+    }
+
+    path.push_back(from);
+    std::reverse(path.begin(), path.end());
+
+    return path;
+}
 
 std::vector<std::vector<int>> Routeplanner_astar::get_routes(int from, int to) {
     std::vector<std::vector<int>> fastest = this->get_routes_rec(from, to, 1, -1, 0);
@@ -171,6 +211,7 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes_rec(int from, int t
 
     while (!frontier.empty()) {
       int current = frontier.get();
+      frontier.pop();
 
       if (current == to) {
         break;
