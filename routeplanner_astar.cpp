@@ -45,6 +45,67 @@ double Routeplanner_astar::get_distance(int airport1, int airport2) {
     return calcCrow(std::get<1>(airport1_pos), std::get<2>(airport1_pos), std::get<1>(airport2_pos), std::get<2>(airport2_pos));
 }
 
+bool Routeplanner_astar::is_connected(int from, int to) {
+    for (int route : this->conn_airpots[from]) {
+        if (route == to) {
+            return true;
+        }
+    }
+}
+
+std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops(int from, int to) {
+    int depth{0};
+
+    std::vector<std::vector<int>> routes;
+    while (routes.size() == 0 && depth <= 4) {
+        routes = get_routes_hops_rec({from}, depth, from, to);
+        depth += 1;
+     }
+    std::cout << routes.size() << std::endl;
+    return routes;
+}
+
+std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops_rec(std::vector<int> prev, int depth, int from, int to) {
+    std::vector<std::vector<int>> routes;
+
+    if (depth == 0) {
+        if (this->is_connected(from, to)) {
+            std::vector<int> new_prev = prev;
+            new_prev.push_back(to);
+            routes.push_back(new_prev);
+        }
+    } else {
+        auto conn_airps = this->conn_airpots[from];
+        std::vector<std::future<std::vector<std::vector<int>>>> fut_routes;
+
+        for (auto &airport : conn_airps) {
+            if (std::find(prev.begin(), prev.end(), airport) != prev.end()) {
+                continue;
+            }
+
+            std::vector<int> new_prev = prev;
+            new_prev.push_back(airport);
+
+            if (depth == 4) {
+                fut_routes.push_back(std::async(std::launch::async, &Routeplanner_astar::get_routes_hops_rec, this, new_prev, depth - 1, airport, to));
+            }
+            else {
+                auto toConcat = get_routes_hops_rec(new_prev, depth - 1, airport, to);
+                if (toConcat.size() != 0) {
+                    routes.insert(routes.end(), toConcat.begin(), toConcat.end());
+                }
+            }
+        }
+
+        for (auto &fut : fut_routes) {
+            auto toConcat = fut.get();
+            routes.insert(routes.end(), toConcat.begin(), toConcat.end());
+        }
+    }
+    return routes;
+}
+
+
 std::vector<std::vector<int>> Routeplanner_astar::get_routes(int from, int to) {
     std::vector<std::vector<int>> fastest = this->get_routes_rec(from, to, 1, -1, 0);
     if (fastest.size() != 0) {

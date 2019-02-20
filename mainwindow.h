@@ -17,6 +17,7 @@
 #include <QCompleter>
 #include <algorithm>
 #include <QRegularExpression>
+#include <ctime>
 
 namespace Ui {
 class MainWindow;
