@@ -37,8 +37,11 @@ struct PriorityQueue {
 
   T get() {
     T best_item = elements.top().second;
-    elements.pop();
     return best_item;
+  }
+
+  void pop() {
+      elements.pop();
   }
 };
 
@@ -48,6 +51,7 @@ public:
     std::vector<std::vector<int>> get_routes(int from, int to);
     std::vector<std::vector<int>> get_routes_hops(int from, int to);
     std::vector<std::vector<int>> sort_routes_distance(std::vector<std::vector<int>> routes);
+    std::vector<int> get_fastest_route_astar(int form, int to);
     double get_route_distance(std::vector<int> route);
     int get_min_hops(int from, int to);
 private:

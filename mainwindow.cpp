@@ -49,17 +49,17 @@ void MainWindow::on_pushButton_clicked()
 
         // A STAR ALGO
         clock_t begin = clock();
-        //auto routes = rpl.get_routes(from_id, to_id);  // UNCOMMENT FOR TESTING SECOND ALGO
+        auto routes = rpl.get_routes(from_id, to_id);  // UNCOMMENT FOR TESTING SECOND ALGO
         clock_t end = clock();
         double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
         std::cout << "get_routes astar: " << elapsed_secs << std::endl;
 
         // BREADTH FIRST SEARCH ALGO
         begin = clock();
-        auto routes = rpl.get_routes_hops(from_id, to_id);
+        auto routes_hops = rpl.get_routes_hops(from_id, to_id);
         end = clock();
         elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-        // routes = routes_hops; // TODO COMMENT
+        routes = routes_hops; // TODO COMMENT
         std::cout << "get_routes hops: " << elapsed_secs << std::endl;
 
         // SORT ROUTES
@@ -68,6 +68,9 @@ void MainWindow::on_pushButton_clicked()
         end = clock();
         elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
         std::cout << "sorting " << routes.size() << " routes took: " << elapsed_secs << std::endl;
+
+        routes.push_back(rpl.get_fastest_route_astar(from_id, to_id));
+        routes.erase(std::unique( routes.begin(), routes.end()), routes.end());
 
         size_t min = 1000;
         for (auto route : routes) {
