@@ -77,26 +77,35 @@ void DrawableMapWidget::drawIatas(Airport from, Airport to, QPainter &painter) {
     painter.drawText(toPnt, to.iata.toStdString().c_str());
 }
 
-void DrawableMapWidget::connectTheDots(std::vector<std::vector<int>> routes)
+void DrawableMapWidget::connectTheDots(std::vector<std::vector<int>> routes, QString airline)
 {
     resetPic();
-    auto airports = DbManager{}.airports;
+    DbManager dbm{};
+    auto airports = dbm.airports;
+    int alliance_id = dbm.getAllianceForAirline(airline);
     QPainter painter{&pic};
-    QPen selected_flight{Qt::red, 3};
+    QPen selected_airline{Qt::red, 3};
     QPen alliance_flight{Qt::blue, 3};
     QPen every_flight{Qt::gray, 3};
-    painter.setPen(QPen{QBrush{QColor{82, 82, 255}}, 3});
+    //painter.setPen(QPen{QBrush{QColor{82, 82, 255}}, 3});
+    painter.setPen(every_flight);
 
     for (auto route : routes) {
         for (size_t i{0}; i < route.size() - 1; i++) {
             Airport fromAP = airports[route[i]];
             Airport toAP = airports[route[i + 1]];
 
+            if (dbm.getAirlineForRoute(fromAP.id, toAP.id) == airline.simplified().trimmed().toStdString()) {
+                painter.setPen(selected_airline);
+            } else if (alliance_id == dbm.getAllianceForAirline(dbm.getAirlineForRoute(fromAP.id, toAP.id).c_str())) {
+                painter.setPen(alliance_flight);
+            } else {
+                painter.setPen(every_flight);
+            }
+
             connectAirports(fromAP, toAP, painter);
 
             drawIatas(fromAP, toAP, painter);
-
-            painter.setPen(QPen{QBrush{QColor{82, 82, 255}}, 3});
         }
     }
 

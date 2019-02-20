@@ -66,7 +66,7 @@ QStringList DbManager::getAllAirportNames() {
     int name = query.record().indexOf("name");
     int iata = query.record().indexOf("iata");
     while ( query.next() ) {
-        result.push_back(QString(query.value(name).toString().simplified() + " (" +query.value(iata).toString() + ")"));
+        result.push_back(QString(query.value(name).toString().simplified().trimmed() + " (" +query.value(iata).toString() + ")"));
     }
     return result;
 }
@@ -149,6 +149,34 @@ Airline DbManager::getAirlineForID(int id)
     return airlines.at(id);
 }
 
+std::string DbManager::getAirlineForRoute(int a1, int a2)
+{
+    QSqlQuery query;
+    query.prepare("select trim(a.name) \"name\", a.alliance from Route r \
+                     join Airline a on r.airline = a.id \
+                    where airport1 = :a1 and airport2 = :a2;");
+    query.bindValue(":a1", a1);
+    query.bindValue(":a2", a2);
+
+    query.exec();
+    query.next();
+
+    return query.value("name").toString().simplified().trimmed().toStdString();
+
+}
+
+int DbManager::getAllianceForAirline(QString airline)
+{
+    QSqlQuery query;
+    query.prepare("select coalesce(alliance, -1) from Airline where trim(name) = :airline");
+    query.bindValue(":airline", airline);
+
+    query.exec();
+    query.next();
+
+    return query.value(0).toInt();
+}
+
 int DbManager::getAirportCount()
 {
     QSqlQuery query("SELECT count(*) FROM Airport;");
@@ -202,7 +230,7 @@ void DbManager::loadAirports()
         auto id{query.value(idCol).toInt()};
         airports.at(id) = Airport(id,
                                   query.value(latitudeCol).toDouble(), query.value(longitudeCol).toDouble(),
-                                  query.value(nameCol).toString().simplified(), query.value(iataCol).toString());
+                                  query.value(nameCol).toString().simplified().trimmed(), query.value(iataCol).toString());
     }
 }
 

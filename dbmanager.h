@@ -42,6 +42,9 @@ public:
     Airport* getAirport(QVariant id);
     Airline getAirlineForID(int id);
 
+    std::string getAirlineForRoute(int a1, int a2);
+    int getAllianceForAirline(QString airline);
+
     std::string getIataForID(int id);
     std::string getNameForID(int id);
 
