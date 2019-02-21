@@ -68,10 +68,10 @@ void MainWindow::on_pushButton_clicked()
             return routes;
         }));
 
+        BreadthFirstSearchAlgorithm br(&dbm);
         // BREADTH FIRST SEARCH ALGO WITH BACKTRACKING
         routes_from_algo.push_back(std::async(std::launch::async, [&]{
             clock_t begin = clock();
-            BreadthFirstSearchAlgorithm br(&dbm);
             auto routes = br.getRoutes(from_id, to_id);
             clock_t end = clock();
             double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
