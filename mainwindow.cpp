@@ -97,13 +97,6 @@ void MainWindow::on_pushButton_clicked()
 
         routes.erase(std::unique( routes.begin(), routes.end()), routes.end());
 
-        for (auto route : routes) {
-            for (auto airport : route) {
-                std::cout << airport << std::endl;
-            }
-
-        }
-
         size_t min = 1000;
         for (auto route : routes) {
             if (route.size() < min) {
@@ -119,6 +112,11 @@ void MainWindow::on_pushButton_clicked()
             ui->flighttable->clear();
             ui->flighttable->addItem("No routes available!");
         }
+
+        for (int i = 0; i < routes_from_algo.size(); i++) {
+            routes_from_algo.at(i).get();
+        }
+
     } catch (...) {}
 }
 

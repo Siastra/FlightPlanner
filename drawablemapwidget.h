@@ -12,6 +12,7 @@
 #include <QApplication>
 #include <algorithm>
 #include <QPainter>
+#include <math.h>
 
 class DrawableMapWidget : public QWidget
 {

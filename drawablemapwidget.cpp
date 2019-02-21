@@ -28,7 +28,7 @@ QPoint DrawableMapWidget::latLonToPoint(double lat, double lon)
 
 void DrawableMapWidget::connectAirports(Airport fromAP, Airport toAP, QPainter &painter)
 {
-    auto directDistance = abs(fromAP.lon - toAP.lon);
+    auto directDistance = fabs(fromAP.lon - toAP.lon);
     auto roundDistance = 360.0 - directDistance;
 
     auto fromPoint = latLonToPoint(fromAP.lat, fromAP.lon);

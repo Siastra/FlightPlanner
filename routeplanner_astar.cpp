@@ -87,6 +87,10 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops(int from, int 
 std::vector<std::vector<int>> Routeplanner_astar::get_routes_hops_rec(std::vector<int> prev, int depth, int from, int to, bool &running) {
     std::vector<std::vector<int>> routes;
 
+    if (! running) {
+        return routes;
+    }
+
     if (depth == 0) {
         if (this->is_connected(from, to)) {
             std::vector<int> new_prev = prev;
