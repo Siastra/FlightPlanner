@@ -235,7 +235,7 @@ std::vector<std::vector<int>> Routeplanner_astar::get_routes_rec(int from, int t
 
         if (cost_so_far.find(next) == cost_so_far.end() || new_cost < cost_so_far[next]) {
           cost_so_far[next] = new_cost;
-          double priority = new_cost + get_distance(next, to);
+          double priority = new_cost + get_distance(next, to); // comment "+ get_distance(next, to)" in order to get Dijkstra’s algorithm
           frontier.put(next, priority);
           came_from[next] = current;
         } else if (rec_layer <= 3 && fastest_route != -1) { // TODO check if airport is in came_from

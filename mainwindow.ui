@@ -53,7 +53,7 @@
         <item row="1" column="1">
          <widget class="QLineEdit" name="FromSearch">
           <property name="text">
-           <string>Vienna(VIE)</string>
+           <string>Vienna (VIE)</string>
           </property>
          </widget>
         </item>
@@ -73,7 +73,7 @@
         <item row="2" column="1">
          <widget class="QLineEdit" name="ToSearch">
           <property name="text">
-           <string>Palm Springs Municipal Apt(PSP)</string>
+           <string>Palm Springs Municipal Apt (PSP)</string>
           </property>
          </widget>
         </item>

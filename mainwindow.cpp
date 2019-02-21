@@ -78,12 +78,13 @@ void MainWindow::on_pushButton_clicked()
             }
         }
 
+        /*
         {
             std::vector<int> tmp_vec = rpl.get_fastest_route_astar(from_id, to_id);
             if (tmp_vec.size() != 0) {
                 routes.push_back(tmp_vec);
             }
-        }
+        }*/
 
         std::cout << "got routes: " << routes.size() << std::endl;
 
