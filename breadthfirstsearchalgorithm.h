@@ -1,3 +1,9 @@
+/*
+ * Author: Königsreiter Simon, Klimont Joel, Lampalzer Alexander, Glavanits Marcel, Lampalzer Konstantin
+ * Class: 5BHIF
+ * Date: 14.02.2019
+ */
+
 #ifndef BREADTHFIRSTSEARCHALGORITHM_H
 #define BREADTHFIRSTSEARCHALGORITHM_H
 

@@ -75,7 +75,7 @@ void MainWindow::on_pushButton_clicked()
             auto routes = br.getRoutes(from_id, to_id);
             clock_t end = clock();
             double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-            std::cout << "get_routes hops: " << elapsed_secs << std::endl;
+            std::cout << "get_routes hops with backtracking: " << elapsed_secs << std::endl;
             return routes;
         }));
 
