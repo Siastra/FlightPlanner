@@ -17,11 +17,11 @@
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout" stretch="2,8">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="headerLabel">
        <property name="font">
         <font>
          <family>Ubuntu Condensed</family>
-         <pointsize>20</pointsize>
+         <pointsize>30</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -38,7 +38,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="textLabel">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>A QT App to manage flights  from Alexander Lampalzer, Klimont Joel,Königsreiter Simon und Glavanits Marcel</string>
        </property>

@@ -10,7 +10,8 @@
 #include <QWidget>
 #include "dbmanager.h"
 #include <QApplication>
-#include "airport.h"
+#include <algorithm>
+#include <QPainter>
 
 class DrawableMapWidget : public QWidget
 {

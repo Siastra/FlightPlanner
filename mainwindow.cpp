@@ -45,8 +45,6 @@ void MainWindow::on_pushButton_clicked()
         auto from_id{dbm.getAirportIdFromInput(ui->FromSearch->text().toStdString())};
         auto to_id{dbm.getAirportIdFromInput(ui->ToSearch->text().toStdString())};
 
-        // std::cout << rpl.get_min_hops(from_id, to_id) << std::endl;
-
         std::vector<std::future<std::vector<std::vector<int>>>> routes_from_algo;
         bool running = true;
 
@@ -81,7 +79,6 @@ void MainWindow::on_pushButton_clicked()
                 }
             }
         }
-        std::cout << "got something maybe or not" << std::endl;
 
         routes.push_back(rpl.get_fastest_route_astar(from_id, to_id));
 
@@ -100,8 +97,12 @@ void MainWindow::on_pushButton_clicked()
                 min = route.size();
             }
         }
-        ui->map->connectTheDots(routes, ui->airlineSearch->text());
-        fillTable(ui->flighttable, routes);
+        if (routes.size() > 0) {
+            ui->map->connectTheDots(routes, ui->airlineSearch->text());
+            fillTable(ui->flighttable, routes);
+        }else{
+            ui->flighttable->addItem("No routes available!");
+        }
     } catch (...) {}
 }
 

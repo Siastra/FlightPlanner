@@ -6,13 +6,6 @@
 
 #include "drawablemapwidget.h"
 
-#include "mainwindow.h"
-#include <algorithm>
-
-#include <QStringList>
-#include <QPainter>
-#include <QApplication>
-
 
 DrawableMapWidget::DrawableMapWidget(QWidget *parent) : QWidget(parent)
 {

@@ -8,14 +8,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "ui_aboutdialog.h"
 #include "aboutdialog.h"
 #include "dbmanager.h"
 #include "routeplanner_astar.h"
 #include "drawablemapwidget.h"
-#include <iostream>
 #include <QListWidget>
-#include <QStringList>
 #include <QCompleter>
 #include <algorithm>
 #include <QRegularExpression>
