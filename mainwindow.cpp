@@ -113,6 +113,9 @@ void MainWindow::on_pushButton_clicked()
             ui->map->connectTheDots(routes, ui->airlineSearch->text());
             fillTable(ui->flighttable, routes);
         }else{
+            ui->map->resetPic();
+            ui->map->update();
+            ui->flighttable->clear();
             ui->flighttable->addItem("No routes available!");
         }
     } catch (...) {}

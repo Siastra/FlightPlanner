@@ -22,6 +22,7 @@ public:
     void paintEvent(QPaintEvent* e);
     void connectTheDots(std::vector<std::vector<int>> routes, QString airline = QString{});
     QPoint latLonToPoint(double lat, double lon);
+     void resetPic();
 signals:
 
 public slots:
@@ -32,7 +33,6 @@ private:
 
     void connectAirports(Airport from, Airport to, QPainter &painter);
     void drawIatas(Airport from, Airport to, QPainter &painter);
-    void resetPic();
 };
 
 #endif // DRAWABLEMAPWIDGET_H

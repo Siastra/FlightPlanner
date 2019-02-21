@@ -45,7 +45,7 @@
         </font>
        </property>
        <property name="text">
-        <string>A QT App to manage flights  from Alexander Lampalzer, Klimont Joel,Königsreiter Simon und Glavanits Marcel</string>
+        <string>A QT App to manage flights  from Alexander Lampalzer, Klimont Joel, Königsreiter Simon und Glavanits Marcel</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
