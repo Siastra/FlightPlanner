@@ -71,19 +71,24 @@ void MainWindow::on_pushButton_clicked()
         }));
 
         std::vector<std::vector<int>> routes;
-        int got_something = 0;
-        while (! got_something) {
+        while (running) {
             for (int i = 0; i < routes_from_algo.size(); i++) {
                 if (routes_from_algo.at(i).wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
                     routes = routes_from_algo.at(i).get();
-                    got_something = i;
                     running = false;
                 }
             }
         }
         std::cout << "got something maybe or not" << std::endl;
 
-        routes.push_back(rpl.get_fastest_route_astar(from_id, to_id));
+        {
+            std::vector<int> tmp_vec = rpl.get_fastest_route_astar(from_id, to_id);
+            if (tmp_vec.size() != 0) {
+                routes.push_back(tmp_vec);
+            }
+        }
+
+        std::cout << "got routes: " << routes.size() << std::endl;
 
         // SORT ROUTES
         clock_t begin = clock();
@@ -93,6 +98,13 @@ void MainWindow::on_pushButton_clicked()
         std::cout << "sorting " << routes.size() << " routes took: " << elapsed_secs << std::endl;
 
         routes.erase(std::unique( routes.begin(), routes.end()), routes.end());
+
+        for (auto route : routes) {
+            for (auto airport : route) {
+                std::cout << airport << std::endl;
+            }
+
+        }
 
         size_t min = 1000;
         for (auto route : routes) {
