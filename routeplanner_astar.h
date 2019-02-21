@@ -51,6 +51,8 @@ public:
     std::vector<std::vector<int>> get_routes(int from, int to, bool &running);
     std::vector<std::vector<int>> get_routes_hops(int from, int to, bool &running);
     std::vector<std::vector<int>> sort_routes_distance(std::vector<std::vector<int>> routes);
+    int getShortestDepth_fast(int from, int to);
+    std::vector<std::vector<int>> getRoutes_fast(int from, int to);
     std::vector<int> get_fastest_route_astar(int form, int to);
     double get_route_distance(std::vector<int> route);
     int get_min_hops(int from, int to);

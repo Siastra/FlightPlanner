@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <QRegularExpression>
 #include <ctime>
+#include "breadthfirstsearchalgorithm.h"
 
 namespace Ui {
 class MainWindow;

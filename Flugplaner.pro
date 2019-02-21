@@ -51,7 +51,8 @@ HEADERS += \
     airport.h \
     airline.h \
     route.h \
-    aboutdialog.h
+    aboutdialog.h \
+    breadthfirstsearchalgorithm.h
 
 FORMS += \
         mainwindow.ui \
