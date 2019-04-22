@@ -148,8 +148,7 @@ std::vector<int> Routeplanner_astar::get_fastest_route_astar(int from, int to) {
       if (current == to) {
         break;
       } else if (conn_airpots[current].size() == 0) {
-          std::vector<int> routes;
-          return routes;
+        continue;
       }
 
       for (int next : this->conn_airpots[current]) {
@@ -163,6 +162,11 @@ std::vector<int> Routeplanner_astar::get_fastest_route_astar(int from, int to) {
       }
     }
 
+    if (current != to) {
+        std::vector<int> routes;
+        return routes;
+    }
+    
     std::vector<int> path;
     int current = to;
     while (current != from) {
